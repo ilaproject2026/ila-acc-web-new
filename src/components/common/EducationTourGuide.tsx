@@ -19,13 +19,24 @@ export interface TourStep {
 
 const TOUR_STEPS: TourStep[] = [
   {
+    id: 'step-hero',
+    targetId: 'edu-tour-hero',
+    title: 'Course Page Header & Actions',
+    subtitle: 'Header Overview & Primary Intake Buttons',
+    description: 'Welcome to the All Courses page! From this header, you can immediately click "Enroll in a Course" to begin your intake application, or click "Browse Catalog Blocks" to jump directly down to the full course selection.',
+    icon: Sparkles,
+    badge: 'Step 1 • Header Actions',
+    actionTip: 'Click "Enroll in a Course" for fast intake, or "Browse Catalog Blocks" to jump directly down to the catalog.',
+    highlightButtons: ['Enroll in a Course', 'Browse Catalog Blocks']
+  },
+  {
     id: 'step-nav',
     targetId: 'edu-tour-nav',
     title: 'Quick Course Switcher',
     subtitle: 'Sticky Header Navigation Bar',
     description: 'Jump directly to key flagship courses (like German Language A1-C2, IELTS, and Tech tracks) or jump straight to the complete catalog without endless scrolling.',
     icon: Compass,
-    badge: 'Step 1 • Navigation',
+    badge: 'Step 2 • Navigation',
     actionTip: 'Click any item to jump immediately to that course block.'
   },
   {
@@ -35,7 +46,7 @@ const TOUR_STEPS: TourStep[] = [
     subtitle: 'Methods, Pacing & Interactive Demos',
     description: 'Every course offers tailored learning tracks (Standard, Intensive, or Intelli-Coach AI). You can preview simulated lessons before committing.',
     icon: Layers,
-    badge: 'Step 2 • Learning Paths',
+    badge: 'Step 3 • Learning Paths',
     actionTip: 'Click "Course Demo" to test our 24/7 AI tutor, or "Enroll" to initiate intake.',
     highlightButtons: ['Course Demo', 'Enroll', 'Details']
   },
@@ -46,7 +57,7 @@ const TOUR_STEPS: TourStep[] = [
     subtitle: 'Integrated Student Benefits',
     description: 'All ILA courses connect directly to our career ecosystem: Work While You Study stipends (€1,000+), module completion cashback, European job placements, and €0 tuition German universities.',
     icon: Gift,
-    badge: 'Step 3 • Career Ecosystem',
+    badge: 'Step 4 • Career Ecosystem',
     actionTip: 'Click any benefit card to explore the full track details.'
   },
   {
@@ -56,7 +67,7 @@ const TOUR_STEPS: TourStep[] = [
     subtitle: 'Transparent Curriculum & Pricing',
     description: 'Review curriculum units, total course duration, transparent fee structures with certification vouchers, and verified academic instructors.',
     icon: BookOpen,
-    badge: 'Step 4 • Specifications',
+    badge: 'Step 5 • Specifications',
     actionTip: 'Click "Open Standalone Specs Page" for dedicated syllabus downloads.'
   },
   {
@@ -66,7 +77,7 @@ const TOUR_STEPS: TourStep[] = [
     subtitle: 'Intelli-Coach German Tutor',
     description: 'Access 24/7 intelligent tutoring assistance, mock German oral simulation evaluations, and real-time career counseling whenever you are studying.',
     icon: BrainCircuit,
-    badge: 'Step 5 • AI Assistance',
+    badge: 'Step 6 • AI Assistance',
     actionTip: 'Click "Access Companion Now" to start chatting with your AI language coach.'
   },
   {
@@ -76,12 +87,12 @@ const TOUR_STEPS: TourStep[] = [
     subtitle: 'Search, Filter & View Layouts',
     description: 'Looking for a specialized certification? Filter courses by Category, Sub-Category, or type any topic into the live Search bar. Toggle between Grid View and compact Line View.',
     icon: Filter,
-    badge: 'Step 6 • Catalog & Views',
+    badge: 'Step 7 • Catalog & Views',
     actionTip: 'Try typing a keyword or switching to "Line View" for a compact summary list.'
   }
 ];
 
-const STORAGE_KEY = 'ila_education_tour_completed_v1';
+const STORAGE_KEY = 'ila_education_tour_completed_v2';
 
 export default function EducationTourGuide() {
   const [isOpen, setIsOpen] = useState(false);
@@ -128,8 +139,12 @@ export default function EducationTourGuide() {
 
     const el = document.getElementById(step.targetId);
     if (el) {
-      // Smooth scroll target into center view
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (step.id === 'step-hero') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        // Smooth scroll target into center view
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
 
       // Calculate bounding rect after scroll starts
       setTimeout(() => {
@@ -217,7 +232,7 @@ export default function EducationTourGuide() {
           <Compass className="w-4 h-4 text-brand-400 group-hover:rotate-45 transition-transform duration-300" />
           <span>Page Tour Guide</span>
           <span className="px-2 py-0.5 rounded-full bg-white/10 text-[10px] text-brand-300 font-bold border border-white/10 hidden sm:inline-block">
-            6 Steps
+            7 Steps
           </span>
         </button>
       </div>
@@ -253,25 +268,25 @@ export default function EducationTourGuide() {
             </div>
 
             <p className="text-sm text-slate-600 leading-relaxed">
-              New here? Take a quick <strong>60-second interactive tour</strong> to learn how to preview AI language lessons, navigate delivery tracks, check student stipends, and filter certifications.
+              New here? Take a quick <strong>60-second interactive tour</strong> to learn how to navigate the header actions, preview AI language lessons, explore delivery tracks, and filter certifications.
             </p>
 
             <div className="grid grid-cols-2 gap-3 py-1 text-xs">
               <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-start gap-2.5">
-                <Compass className="w-4 h-4 text-brand-600 shrink-0 mt-0.5" />
+                <Sparkles className="w-4 h-4 text-brand-600 shrink-0 mt-0.5" />
+                <span className="font-bold text-slate-700">Header &amp; Intake Actions</span>
+              </div>
+              <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-start gap-2.5">
+                <Compass className="w-4 h-4 text-indigo-600 shrink-0 mt-0.5" />
                 <span className="font-bold text-slate-700">Course Quick Switcher</span>
               </div>
               <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-start gap-2.5">
-                <Play className="w-4 h-4 text-brand-600 shrink-0 mt-0.5" />
+                <Play className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                 <span className="font-bold text-slate-700">1-Click AI Course Demos</span>
               </div>
               <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-start gap-2.5">
                 <Gift className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
                 <span className="font-bold text-slate-700">Student Stipends &amp; Rewards</span>
-              </div>
-              <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-start gap-2.5">
-                <Filter className="w-4 h-4 text-indigo-600 shrink-0 mt-0.5" />
-                <span className="font-bold text-slate-700">Smart Search &amp; Views</span>
               </div>
             </div>
 

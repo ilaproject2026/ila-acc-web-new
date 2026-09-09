@@ -110,7 +110,7 @@ export default function EducationPage() {
     <div className="pt-20 bg-slate-50 min-h-screen">
       
       {/* 1. HERO HEADER */}
-      <section className="bg-slate-950 text-white py-20 px-6 rounded-b-[3rem] shadow-2xl mb-6">
+      <section id="edu-tour-hero" className="bg-slate-950 text-white py-20 px-6 rounded-b-[3rem] shadow-2xl mb-6">
         <div className="container-max mx-auto text-center">
           <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 text-white text-xs font-bold uppercase tracking-widest mb-4 backdrop-blur-md">
             <Star className="w-4 h-4 text-amber-400" /> Education Hub Framework
@@ -119,14 +119,16 @@ export default function EducationPage() {
           <p className="text-slate-300 text-lg md:text-xl mb-8 max-w-3xl mx-auto leading-relaxed">
             Adaptive sequential pathways, official European certifications, and direct career placements.
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-4">
+          <div id="edu-tour-hero-actions" className="flex flex-wrap items-center justify-center gap-4">
             <button 
+              id="edu-tour-hero-enroll"
               onClick={() => navigateTo('#applications?tab=Education')} 
               className="px-9 py-4 bg-brand-600 hover:bg-brand-500 font-black rounded-xl text-base transition-all shadow-lg cursor-pointer"
             >
               Enroll in a Course
             </button>
             <button 
+              id="edu-tour-hero-browse"
               onClick={() => scrollTo('catalog-blocks')} 
               className="px-7 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl text-base transition-all border border-white/20 cursor-pointer backdrop-blur-md"
             >
