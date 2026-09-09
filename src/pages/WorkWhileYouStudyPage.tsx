@@ -182,6 +182,11 @@ export default function WorkWhileYouStudyPage() {
   // Quick Application dropdown states for top boxes
   const [studentSubTrack, setStudentSubTrack] = useState('German Language + Admin Pilot');
   const [jobSeekerSubTrack, setJobSeekerSubTrack] = useState('IT & AI Automation');
+  const [indiaTrack, setIndiaTrack] = useState('IT & AI Software Pilot');
+  const [abroadServiceTrack, setAbroadServiceTrack] = useState('Airport Pickup & Reception');
+  const [germanPathwayTrack, setGermanPathwayTrack] = useState('Language (A1-B2) + Technical Skill Training');
+  const [rewardRole, setRewardRole] = useState('Junior Consultant');
+  const [rewardCategory, setRewardCategory] = useState('All Categories (Max Commissions)');
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -273,111 +278,249 @@ export default function WorkWhileYouStudyPage() {
 
       <div className="container-max px-4 sm:px-6 space-y-16 pb-20">
         
-        {/* ================= 2. TOP SPLIT INTAKE: TWO TRACKS (LEFT) + HIGH-VISIBILITY BROCHURE (RIGHT) ================= */}
+        {/* ================= 2. CORE CONCEPT MESSAGING BANNER ================= */}
+        <div className="bg-gradient-to-r from-slate-900 via-brand-900 to-indigo-950 rounded-3xl p-6 sm:p-8 text-white shadow-xl border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="space-y-2">
+            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400 text-slate-950 text-xs font-black uppercase tracking-wider">
+              Core Concept & Global Mission
+            </span>
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight text-white leading-tight">
+              "Do not waste your time just studying; gather international experience and earn while you learn."
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-300 max-w-3xl">
+              Gain verified corporate project credentials, earn monthly stipends, and build direct pathways to European and Indian industry placements.
+            </p>
+          </div>
+          <button
+            onClick={() => navigateTo('#applications?tab=Work While You Study')}
+            className="shrink-0 px-6 py-3.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black rounded-xl text-xs sm:text-sm shadow-lg transition-all cursor-pointer flex items-center gap-2"
+          >
+            <span>Apply Now</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* ================= 3. TOP SPLIT INTAKE: FOUR CORE PROGRAM BLOCKS (LEFT) + HIGH-VISIBILITY BROCHURE (RIGHT) ================= */}
         <section id="how-to-join" className="scroll-mt-28">
           <div className="bg-white rounded-[2.5rem] shadow-2xl border border-slate-200 overflow-hidden p-4 sm:p-6 lg:p-8">
             <div className="grid lg:grid-cols-12 gap-6 items-stretch">
               
-              {/* LEFT 5-COLUMN: Work While You Study & EARN WHILE YOU LEARN WITH DIRECT ACTION */}
-              <div className="lg:col-span-5 flex flex-col justify-between space-y-4 order-2 lg:order-1">
+              {/* LEFT 6-COLUMN: 4 CORE PROGRAM BLOCKS WITH DIRECT ACTION */}
+              <div className="lg:col-span-6 flex flex-col justify-between space-y-4 order-2 lg:order-1">
                 
-                {/* Track A: Students */}
-                <div className="bg-slate-50 rounded-3xl p-5 sm:p-6 border-2 border-emerald-500/40 shadow-xs flex flex-col justify-between">
+                {/* Block 1: Work While You Learn in India */}
+                <div className="bg-slate-50 rounded-3xl p-4 sm:p-5 border-2 border-emerald-500/40 shadow-xs flex flex-col justify-between">
                   <div>
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
-                          <GraduationCap className="w-5 h-5" />
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
+                          <Briefcase className="w-4 h-4" />
                         </div>
                         <div>
-                          <span className="text-[10px] font-black uppercase text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded">For Students</span>
-                          <h3 className="text-lg font-black text-slate-900 leading-tight">Work While You Study</h3>
+                          <span className="text-[9px] font-black uppercase text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded">Domestic Track</span>
+                          <h3 className="text-sm sm:text-base font-black text-slate-900 leading-tight">Work While You Learn in India</h3>
                         </div>
                       </div>
-                      <span className="text-xs font-black text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                      <span className="text-[11px] font-black text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
                         ₹10k–₹30k/mo
                       </span>
                     </div>
 
-                    <p className="text-slate-600 text-xs leading-relaxed mb-3 font-medium">
-                      Study German Language (A1-B2) or Tech Courses while performing practical workflows to self-fund your education.
+                    <p className="text-slate-600 text-xs leading-relaxed mb-2.5 font-medium">
+                      Live corporate and tech projects in India. Build verified work experience with zero career gap right after degree or diploma.
                     </p>
 
-                    {/* Quick Selection Dropdown */}
-                    <div className="mb-3">
-                      <label className="block text-[10px] font-bold text-slate-700 uppercase mb-1">Choose Study Track:</label>
+                    <div className="mb-2.5">
+                      <label className="block text-[10px] font-bold text-slate-700 uppercase mb-1">Choose India Work Program:</label>
                       <select 
-                        value={studentSubTrack}
-                        onChange={(e) => setStudentSubTrack(e.target.value)}
+                        value={indiaTrack}
+                        onChange={(e) => setIndiaTrack(e.target.value)}
                         className="w-full px-3 py-1.5 bg-white rounded-xl border border-slate-300 text-xs font-semibold text-slate-800 focus:outline-none focus:border-emerald-600"
                       >
-                        <option value="German Language + Admin Pilot">German Language + Admin Pilot</option>
-                        <option value="Technical Skills + AI Coding">Technical Skills + AI Coding</option>
-                        <option value="Commerce + European Trade Prep">Commerce + European Trade Prep</option>
+                        <option value="IT & AI Software Pilot">IT & AI Software Pilot</option>
+                        <option value="Solar & Technical Service Business">Solar & Technical Service Business</option>
+                        <option value="Office Admin, Billing & Accounts">Office Admin, Billing & Accounts</option>
+                        <option value="Import-Export Logistics & Trade">Import-Export Logistics & Trade</option>
                       </select>
                     </div>
                   </div>
 
                   <button 
-                    onClick={() => navigateTo(`#applications?tab=Work While You Study (Student: ${encodeURIComponent(studentSubTrack)})`)} 
-                    className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs rounded-xl cursor-pointer transition-all shadow-sm flex items-center justify-center gap-1.5"
+                    onClick={() => navigateTo(`#applications?tab=Work While You Study (India: ${encodeURIComponent(indiaTrack)})`)} 
+                    className="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs rounded-xl cursor-pointer transition-all shadow-sm flex items-center justify-center gap-1.5"
                   >
-                    <span>Apply Student Track</span>
+                    <span>Apply India Track</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
 
-                {/* Track B: Job Seekers */}
-                <div className="bg-slate-50 rounded-3xl p-5 sm:p-6 border-2 border-brand-500/40 shadow-xs flex flex-col justify-between">
+                {/* Block 2: Part time While You Study Abroad (End-to-End Student Services) */}
+                <div className="bg-slate-50 rounded-3xl p-4 sm:p-5 border-2 border-blue-500/40 shadow-xs flex flex-col justify-between">
                   <div>
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-2xl bg-brand-100 text-brand-700 flex items-center justify-center font-bold">
-                          <Briefcase className="w-5 h-5" />
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-9 h-9 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center font-bold">
+                          <Globe2 className="w-4 h-4" />
                         </div>
                         <div>
-                          <span className="text-[10px] font-black uppercase text-brand-800 bg-brand-100 px-2 py-0.5 rounded">For Job Seekers & Freshers</span>
-                          <h3 className="text-lg font-black text-slate-900 leading-tight">EARN WHILE YOU LEARN</h3>
+                          <span className="text-[9px] font-black uppercase text-blue-800 bg-blue-100 px-2 py-0.5 rounded">Abroad Services</span>
+                          <h3 className="text-sm sm:text-base font-black text-slate-900 leading-tight">Part time While You Study Abroad</h3>
                         </div>
                       </div>
-                      <span className="text-xs font-black text-brand-700 bg-brand-50 px-2.5 py-1 rounded-full border border-brand-200">
-                        1-Yr Letter
+                      <span className="text-[11px] font-black text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
+                        €50–€250/task
                       </span>
                     </div>
 
-                    <p className="text-slate-600 text-xs leading-relaxed mb-3 font-medium">
-                      Join as Junior Consultant. Work on live business pilots, master AI workflows, and transition to permanent full-package salary.
+                    <p className="text-slate-600 text-xs leading-relaxed mb-2 font-medium">
+                      End-to-End Student Services: comprehensive support including airport reception, room bookings, local bank/Anmeldung, and job placement assistance.
                     </p>
 
-                    {/* Quick Selection Dropdown */}
-                    <div className="mb-3">
-                      <label className="block text-[10px] font-bold text-slate-700 uppercase mb-1">Choose Work Domain:</label>
+                    {/* End to End Service Badges */}
+                    <div className="grid grid-cols-2 gap-1 mb-2.5 text-[10px] text-slate-700 font-bold">
+                      <span className="bg-white px-2 py-1 rounded border border-slate-200 flex items-center gap-1">🛬 Airport pickup / reception</span>
+                      <span className="bg-white px-2 py-1 rounded border border-slate-200 flex items-center gap-1">🏠 Room & WG arrangements</span>
+                      <span className="bg-white px-2 py-1 rounded border border-slate-200 flex items-center gap-1">📑 Bank, Anmeldung & docs</span>
+                      <span className="bg-white px-2 py-1 rounded border border-slate-200 flex items-center gap-1">💼 Part-time job placement</span>
+                    </div>
+
+                    <div className="mb-2.5">
+                      <label className="block text-[10px] font-bold text-slate-700 uppercase mb-1">Select Overseas Service Focus:</label>
                       <select 
-                        value={jobSeekerSubTrack}
-                        onChange={(e) => setJobSeekerSubTrack(e.target.value)}
-                        className="w-full px-3 py-1.5 bg-white rounded-xl border border-slate-300 text-xs font-semibold text-slate-800 focus:outline-none focus:border-brand-600"
+                        value={abroadServiceTrack}
+                        onChange={(e) => setAbroadServiceTrack(e.target.value)}
+                        className="w-full px-3 py-1.5 bg-white rounded-xl border border-slate-300 text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-600"
                       >
-                        <option value="IT & AI Automation">IT & AI Automation</option>
-                        <option value="Solar & Technical Service Business">Solar & Technical Service Business</option>
-                        <option value="International Sourcing & Logistics">International Sourcing & Logistics</option>
-                        <option value="Office Administration & Accounts">Office Administration & Accounts</option>
+                        <option value="Airport Pickup & Reception">Airport Pickup & Reception</option>
+                        <option value="Room & WG Flatshare Arrangements">Room & WG Flatshare Arrangements</option>
+                        <option value="Documentation, Bank & Local Setup">Documentation, Bank & Local Setup</option>
+                        <option value="Job Placement Assistance & Part-Time Roles">Job Placement Assistance & Part-Time Roles</option>
                       </select>
                     </div>
                   </div>
 
                   <button 
-                    onClick={() => navigateTo(`#applications?tab=Work While You Study (Job: ${encodeURIComponent(jobSeekerSubTrack)})`)} 
-                    className="w-full py-2.5 bg-brand-600 hover:bg-brand-500 text-white font-black text-xs rounded-xl cursor-pointer transition-all shadow-sm flex items-center justify-center gap-1.5"
+                    onClick={() => navigateTo(`#applications?tab=Work While You Study (Abroad: ${encodeURIComponent(abroadServiceTrack)})`)} 
+                    className="w-full py-2 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl cursor-pointer transition-all shadow-sm flex items-center justify-center gap-1.5"
                   >
-                    <span>Apply Junior Consultant Track</span>
+                    <span>Join Student Services & Earn Abroad</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
+                {/* Block 3: German Project Onboarding Pathway */}
+                <div className="bg-slate-50 rounded-3xl p-4 sm:p-5 border-2 border-indigo-500/40 shadow-xs flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-9 h-9 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold">
+                          <Cpu className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <span className="text-[9px] font-black uppercase text-indigo-800 bg-indigo-100 px-2 py-0.5 rounded">Germany Relocation</span>
+                          <h3 className="text-sm sm:text-base font-black text-slate-900 leading-tight">German Project Onboarding Pathway</h3>
+                        </div>
+                      </div>
+                      <span className="text-[11px] font-black text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-200">
+                        100% Sponsor
+                      </span>
+                    </div>
+
+                    <p className="text-slate-600 text-xs leading-relaxed mb-2.5 font-medium">
+                      Focuses on intensive German language + admin and technical skill training. Win client orders with company toolkits to qualify for direct German sponsorship.
+                    </p>
+
+                    <div className="mb-2.5">
+                      <label className="block text-[10px] font-bold text-slate-700 uppercase mb-1">Choose Onboarding Pathway:</label>
+                      <select 
+                        value={germanPathwayTrack}
+                        onChange={(e) => setGermanPathwayTrack(e.target.value)}
+                        className="w-full px-3 py-1.5 bg-white rounded-xl border border-slate-300 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-600"
+                      >
+                        <option value="Language (A1-B2) + Technical Skill Training">Language (A1-B2) + Technical Skill Training</option>
+                        <option value="Solar & EV Diagnostics Business Pilot">Solar & EV Diagnostics Business Pilot</option>
+                        <option value="Healthcare German & Clinical Admin Pilot">Healthcare German & Clinical Admin Pilot</option>
+                        <option value="Software & AI Automated Lead Architecture">Software & AI Automated Lead Architecture</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <button 
+                    onClick={() => navigateTo(`#applications?tab=Work While You Study (German Pathway: ${encodeURIComponent(germanPathwayTrack)})`)} 
+                    className="w-full py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs rounded-xl cursor-pointer transition-all shadow-sm flex items-center justify-center gap-1.5"
+                  >
+                    <span>Apply German Pathway</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
+                {/* Block 4: Rewards Plans Block (Junior Consultant Role & Promotion Category) */}
+                <div className="bg-slate-50 rounded-3xl p-4 sm:p-5 border-2 border-amber-500/40 shadow-xs flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-9 h-9 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-bold">
+                          <Crown className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <span className="text-[9px] font-black uppercase text-amber-900 bg-amber-100 px-2 py-0.5 rounded">Commissions & Certification</span>
+                          <h3 className="text-sm sm:text-base font-black text-slate-900 leading-tight">Rewards Plans & Junior Consultant</h3>
+                        </div>
+                      </div>
+                      <span className="text-[11px] font-black text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full border border-amber-300">
+                        1,000 pts/mo
+                      </span>
+                    </div>
+
+                    <p className="text-slate-600 text-xs leading-relaxed mb-2.5 font-medium">
+                      Select your consultant role and the verticals you wish to promote. Earn cash commissions and official Marketing Consultant work certification.
+                    </p>
+
+                    <div className="grid sm:grid-cols-2 gap-2 mb-2.5">
+                      <div>
+                        <label className="block text-[10px] font-bold text-slate-700 uppercase mb-1">Select Role:</label>
+                        <select 
+                          value={rewardRole}
+                          onChange={(e) => setRewardRole(e.target.value)}
+                          className="w-full px-2.5 py-1.5 bg-white rounded-xl border border-slate-300 text-xs font-semibold text-slate-800 focus:outline-none focus:border-amber-600"
+                        >
+                          <option value="Junior Consultant">Junior Consultant</option>
+                          <option value="Campus Brand Ambassador">Campus Brand Ambassador</option>
+                          <option value="Freelance Educational Consultant">Freelance Educational Consultant</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className="block text-[10px] font-bold text-slate-700 uppercase mb-1">Category to Promote:</label>
+                        <select 
+                          value={rewardCategory}
+                          onChange={(e) => setRewardCategory(e.target.value)}
+                          className="w-full px-2.5 py-1.5 bg-white rounded-xl border border-slate-300 text-xs font-semibold text-slate-800 focus:outline-none focus:border-amber-600"
+                        >
+                          <option value="All Categories (Max Commissions)">All Categories (Max Commissions)</option>
+                          <option value="Study Abroad">Study Abroad</option>
+                          <option value="Work While Study">Work While Study</option>
+                          <option value="All Courses">All Courses</option>
+                          <option value="Visa & Services">Visa & Services</option>
+                          <option value="Job & Career Services">Job & Career Services</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button 
+                    onClick={() => navigateTo(`#applications?tab=Rewards (${encodeURIComponent(rewardRole)} - ${encodeURIComponent(rewardCategory)})`)} 
+                    className="w-full py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs rounded-xl cursor-pointer transition-all shadow-sm flex items-center justify-center gap-1.5"
+                  >
+                    <span>Register as {rewardRole}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
 
               </div>
 
-              {/* RIGHT 7-COLUMN: DOUBLE-WIDE PROMO ALBUM RUNNING ALL CONTENT HIGHLIGHTS */}
-              <div className="lg:col-span-7 relative min-h-[520px] lg:min-h-[580px] rounded-3xl overflow-hidden text-white shadow-2xl flex flex-col justify-between p-6 sm:p-10 border border-slate-800 bg-slate-950 group order-1 lg:order-2">
+              {/* RIGHT 6-COLUMN: DOUBLE-WIDE PROMO ALBUM RUNNING ALL CONTENT HIGHLIGHTS */}
+              <div className="lg:col-span-6 relative min-h-[520px] lg:min-h-[580px] rounded-3xl overflow-hidden text-white shadow-2xl flex flex-col justify-between p-6 sm:p-10 border border-slate-800 bg-slate-950 group order-1 lg:order-2">
                 
                 {/* Background Image with High Visibility */}
                 <div 

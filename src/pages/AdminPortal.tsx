@@ -22,6 +22,7 @@ import CentralInquiriesHub from '../components/admin/frontoffice/CentralInquirie
 import WalkinIntakeDesk from '../components/admin/frontoffice/WalkinIntakeDesk';
 import OnlineEnquiryFunnel from '../components/admin/frontoffice/OnlineEnquiryFunnel';
 import DepartmentInquiryView from '../components/admin/frontoffice/DepartmentInquiryView';
+import DepartmentHubSubNav from '../components/admin/DepartmentHubSubNav';
 
 interface VisitorStatType {
   totalVisitors: number;
@@ -370,139 +371,159 @@ export default function AdminPortal() {
             </div>
           )}
 
-          {activeTab === 'overview' && <><ExecutiveOverviewHub /><ContentCreationTool departmentName="Executive Overview" /></>}
+          {activeTab === 'overview' && (
+            <DepartmentHubSubNav departmentName="CEO & Executive Command" hodName="Master CEO & Strategic GM">
+              <ExecutiveOverviewHub />
+              <ContentCreationTool departmentName="Executive Overview" />
+            </DepartmentHubSubNav>
+          )}
           {activeTab === 'gm' && <><GMConsole /><ContentCreationTool departmentName="General Manager" /></>}
           {activeTab === 'hr' && <><HRConsultantHub /><ContentCreationTool departmentName="HR Department" /></>}
           {activeTab === 'finance' && <><FinanceCommissionHub /><ContentCreationTool departmentName="Finance Hub" /></>}
-          {activeTab === 'marketing' && <><MarketingStudioHub /><ContentCreationTool departmentName="Marketing Studio" /></>}
+          {activeTab === 'marketing' && (
+            <DepartmentHubSubNav departmentName="Marketing Studio" hodName="Vikram Malhotra (Marketing Lead)">
+              <MarketingStudioHub />
+              <ContentCreationTool departmentName="Marketing Studio" />
+            </DepartmentHubSubNav>
+          )}
 
           {/* ALL COURSES HUB */}
           {activeTab === 'education' && (
-            <div className="space-y-6">
-              <EducationHub />
-              <DepartmentInquiryView 
-                departmentName="Education" 
-                title="All Courses Hub Candidate Intake Desk" 
-                subtitle="Track walk-in intakes, language batches, and classroom enrollment passes."
-              />
-              <ContentCreationTool departmentName="All Courses Hub" />
-            </div>
+            <DepartmentHubSubNav departmentName="Education & Languages" hodName="Dr. Evelyn Brand (Academic HOD)">
+              <div className="space-y-6">
+                <EducationHub />
+                <DepartmentInquiryView 
+                  departmentName="Education" 
+                  title="All Courses Hub Candidate Intake Desk" 
+                  subtitle="Track walk-in intakes, language batches, and classroom enrollment passes."
+                />
+                <ContentCreationTool departmentName="All Courses Hub" />
+              </div>
+            </DepartmentHubSubNav>
           )}
 
           {/* STUDY ABROAD HUB */}
           {activeTab === 'study_abroad' && (
-            <div className="space-y-6">
-              <div className="flex justify-between items-center border-b pb-4">
-                <div>
-                  <span className="text-[10px] font-black uppercase bg-brand-50 text-brand-700 px-2.5 py-1 rounded">Department Hub</span>
-                  <h2 className="text-xl font-black text-slate-900 mt-1">Study Abroad Hub & University Placement</h2>
+            <DepartmentHubSubNav departmentName="Study Abroad" hodName="Klaus Werner (Study Abroad HOD)">
+              <div className="space-y-6">
+                <div className="flex justify-between items-center border-b pb-4">
+                  <div>
+                    <span className="text-[10px] font-black uppercase bg-brand-50 text-brand-700 px-2.5 py-1 rounded">Department Hub</span>
+                    <h2 className="text-xl font-black text-slate-900 mt-1">Study Abroad Hub & University Placement</h2>
+                  </div>
+                  <span className="text-xs font-bold text-slate-500">Global University Contracts & Admissions</span>
                 </div>
-                <span className="text-xs font-bold text-slate-500">Global University Contracts & Admissions</span>
-              </div>
-              
-              <DepartmentInquiryView 
-                departmentName="Study Abroad" 
-                title="Study Abroad Hub Candidate Pipeline" 
-                subtitle="University applications, APS certificate verifications, and admission offer letters."
-              />
+                
+                <DepartmentInquiryView 
+                  departmentName="Study Abroad" 
+                  title="Study Abroad Hub Candidate Pipeline" 
+                  subtitle="University applications, APS certificate verifications, and admission offer letters."
+                />
 
-              <div className="grid sm:grid-cols-2 gap-4 text-xs">
-                <div className="p-5 bg-slate-50 border rounded-2xl space-y-2">
-                  <div className="font-black text-slate-900">🏛️ University Directory</div>
-                  <p className="text-slate-500">Input partner institutions across Germany and EU territories.</p>
-                  <button disabled={!isAuthorizedToEdit} className="px-3 py-1.5 bg-brand-600 text-white rounded-lg font-bold disabled:opacity-50 cursor-pointer">Add Institution</button>
+                <div className="grid sm:grid-cols-2 gap-4 text-xs">
+                  <div className="p-5 bg-slate-50 border rounded-2xl space-y-2">
+                    <div className="font-black text-slate-900">🏛️ University Directory & Partner Library</div>
+                    <p className="text-slate-500">Target institutions across Germany and EU territories with APS & admission corridors.</p>
+                    <button disabled={!isAuthorizedToEdit} className="px-3 py-1.5 bg-brand-600 text-white rounded-lg font-bold disabled:opacity-50 cursor-pointer">Add Partner Institution</button>
+                  </div>
+                  <div className="p-5 bg-slate-50 border rounded-2xl space-y-2">
+                    <div className="font-black text-slate-900">📄 Dossier & APS Checklist Control</div>
+                    <p className="text-slate-500">Manage checklist items before forwarding candidates to Visa dept.</p>
+                    <button disabled={!isAuthorizedToEdit} className="px-3 py-1.5 bg-brand-600 text-white rounded-lg font-bold disabled:opacity-50 cursor-pointer">Verify Checklists</button>
+                  </div>
                 </div>
-                <div className="p-5 bg-slate-50 border rounded-2xl space-y-2">
-                  <div className="font-black text-slate-900">📄 Dossier & Checklist Control</div>
-                  <p className="text-slate-500">Manage checklist items before forwarding candidates to Visa dept.</p>
-                  <button disabled={!isAuthorizedToEdit} className="px-3 py-1.5 bg-brand-600 text-white rounded-lg font-bold disabled:opacity-50 cursor-pointer">Verify Checklists</button>
-                </div>
+                <ContentCreationTool departmentName="Study Abroad Hub" />
+                <DepartmentApprovalsTab departmentName="Study Abroad Hub" />
+                <DepartmentUpdatesTab departmentName="Study Abroad Hub" />
               </div>
-              <ContentCreationTool departmentName="Study Abroad Hub" />
-              <DepartmentApprovalsTab departmentName="Study Abroad Hub" />
-              <DepartmentUpdatesTab departmentName="Study Abroad Hub" />
-            </div>
+            </DepartmentHubSubNav>
           )}
 
           {/* VISA AND SERVICE HUB */}
           {activeTab === 'visa' && (
-            <div className="space-y-6">
-              <div className="flex justify-between items-center border-b pb-4">
-                <div>
-                  <span className="text-[10px] font-black uppercase bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded">Department Hub</span>
-                  <h2 className="text-xl font-black text-slate-900 mt-1">Visa and Service Hub & Immigration Compliance</h2>
+            <DepartmentHubSubNav departmentName="Visa & Immigration" hodName="Adv. Rajesh Sharma (Visa & Compliance HOD)">
+              <div className="space-y-6">
+                <div className="flex justify-between items-center border-b pb-4">
+                  <div>
+                    <span className="text-[10px] font-black uppercase bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded">Department Hub</span>
+                    <h2 className="text-xl font-black text-slate-900 mt-1">Visa and Service Hub & Immigration Compliance</h2>
+                  </div>
+                  <span className="text-xs font-bold text-slate-500">Embassy Paperwork, Blocked Accounts & Verification</span>
                 </div>
-                <span className="text-xs font-bold text-slate-500">Embassy Paperwork, Blocked Accounts & Verification</span>
-              </div>
 
-              <DepartmentInquiryView 
-                departmentName="Visa" 
-                title="Visa and Service Hub Candidate Pipeline" 
-                subtitle="Embassy appointment queues, blocked account (€11,900) proofs, and APS clearance."
-              />
+                <DepartmentInquiryView 
+                  departmentName="Visa" 
+                  title="Visa and Service Hub Candidate Pipeline" 
+                  subtitle="Embassy appointment queues, blocked account (€11,900) proofs, and APS clearance."
+                />
 
-              <div className="grid sm:grid-cols-2 gap-4 text-xs">
-                <div className="p-5 bg-slate-50 border rounded-2xl space-y-2">
-                  <div className="font-black text-slate-900">🛂 Consulate Slot Queue</div>
-                  <p className="text-slate-500">Track VFS appointment schedules and document verification status.</p>
-                  <button disabled={!isAuthorizedToEdit} className="px-3 py-1.5 bg-emerald-600 text-white rounded-lg font-bold disabled:opacity-50 cursor-pointer">Manage Slots</button>
+                <div className="grid sm:grid-cols-2 gap-4 text-xs">
+                  <div className="p-5 bg-slate-50 border rounded-2xl space-y-2">
+                    <div className="font-black text-slate-900">🛂 Consulate Slot Queue</div>
+                    <p className="text-slate-500">Track VFS appointment schedules and document verification status.</p>
+                    <button disabled={!isAuthorizedToEdit} className="px-3 py-1.5 bg-emerald-600 text-white rounded-lg font-bold disabled:opacity-50 cursor-pointer">Manage Slots</button>
+                  </div>
+                  <div className="p-5 bg-slate-50 border rounded-2xl space-y-2">
+                    <div className="font-black text-slate-900">⚖️ Dynamic Regulatory Checklists</div>
+                    <p className="text-slate-500">Update global immigration rules and financial proof guidelines in real-time.</p>
+                    <button disabled={!isAuthorizedToEdit} className="px-3 py-1.5 bg-emerald-600 text-white rounded-lg font-bold disabled:opacity-50 cursor-pointer">Update Rules</button>
+                  </div>
                 </div>
-                <div className="p-5 bg-slate-50 border rounded-2xl space-y-2">
-                  <div className="font-black text-slate-900">⚖️ Regulatory Checklists</div>
-                  <p className="text-slate-500">Update German immigration rules and financial proof guidelines.</p>
-                  <button disabled={!isAuthorizedToEdit} className="px-3 py-1.5 bg-emerald-600 text-white rounded-lg font-bold disabled:opacity-50 cursor-pointer">Update Rules</button>
-                </div>
+                <ContentCreationTool departmentName="Visa and Service Hub" />
+                <DepartmentApprovalsTab departmentName="Visa and Service Hub" />
+                <DepartmentUpdatesTab departmentName="Visa and Service Hub" />
               </div>
-              <ContentCreationTool departmentName="Visa and Service Hub" />
-              <DepartmentApprovalsTab departmentName="Visa and Service Hub" />
-              <DepartmentUpdatesTab departmentName="Visa and Service Hub" />
-            </div>
+            </DepartmentHubSubNav>
           )}
 
           {/* WORK AND STUDY HUB */}
           {activeTab === 'work_while_you_study' && (
-            <div className="space-y-6">
-              <div className="flex justify-between items-center border-b pb-4">
-                <div>
-                  <span className="text-[10px] font-black uppercase bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded">Department Hub</span>
-                  <h2 className="text-xl font-black text-slate-900 mt-1">Work and Study Hub (Ausbildung & Dual System) Operations</h2>
+            <DepartmentHubSubNav departmentName="Work While You Study" hodName="Anja Richter (Dual-Study & Ausbildungs HOD)">
+              <div className="space-y-6">
+                <div className="flex justify-between items-center border-b pb-4">
+                  <div>
+                    <span className="text-[10px] font-black uppercase bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded">Department Hub</span>
+                    <h2 className="text-xl font-black text-slate-900 mt-1">Work and Study Hub (Ausbildung & Dual System) Operations</h2>
+                  </div>
+                  <span className="text-xs font-bold text-slate-500">Dual-System Contracts & Corporate Stipends</span>
                 </div>
-                <span className="text-xs font-bold text-slate-500">Dual-System Contracts & Corporate Stipends</span>
+
+                <DepartmentInquiryView 
+                  departmentName="Work While You Study" 
+                  title="Work and Study Hub / Dual Apprenticeship Pipeline" 
+                  subtitle="Match candidates with German employers for €1,200/mo stipend contracts."
+                />
+
+                <ContentCreationTool departmentName="Work and Study Hub" />
+                <DepartmentApprovalsTab departmentName="Work and Study Hub" />
+                <DepartmentUpdatesTab departmentName="Work and Study Hub" />
               </div>
-
-              <DepartmentInquiryView 
-                departmentName="Work While You Study" 
-                title="Work and Study Hub / Dual Apprenticeship Pipeline" 
-                subtitle="Match candidates with German employers for €1,200/mo stipend contracts."
-              />
-
-              <ContentCreationTool departmentName="Work and Study Hub" />
-              <DepartmentApprovalsTab departmentName="Work and Study Hub" />
-              <DepartmentUpdatesTab departmentName="Work and Study Hub" />
-            </div>
+            </DepartmentHubSubNav>
           )}
 
           {/* JOB AND CAREER HUB */}
           {activeTab === 'jobs' && (
-            <div className="space-y-6">
-              <div className="flex justify-between items-center border-b pb-4">
-                <div>
-                  <span className="text-[10px] font-black uppercase bg-brand-50 text-brand-700 px-2.5 py-1 rounded">Department Hub</span>
-                  <h2 className="text-xl font-black text-slate-900 mt-1">Job and Career Hub Placement Engine</h2>
+            <DepartmentHubSubNav departmentName="Job & Career Placements" hodName="Priya Menon (Corporate Placement HOD)">
+              <div className="space-y-6">
+                <div className="flex justify-between items-center border-b pb-4">
+                  <div>
+                    <span className="text-[10px] font-black uppercase bg-brand-50 text-brand-700 px-2.5 py-1 rounded">Department Hub</span>
+                    <h2 className="text-xl font-black text-slate-900 mt-1">Job and Career Hub Placement Engine</h2>
+                  </div>
+                  <span className="text-xs font-bold text-slate-500">European Employer Match & Placement</span>
                 </div>
-                <span className="text-xs font-bold text-slate-500">European Employer Match & Placement</span>
+
+                <DepartmentInquiryView 
+                  departmentName="Jobs" 
+                  title="Job and Career Hub Candidates & Placements" 
+                  subtitle="Healthcare, IT, and Engineering candidate CVs and employer interview schedules."
+                />
+
+                <ContentCreationTool departmentName="Job and Career Hub" />
+                <DepartmentApprovalsTab departmentName="Job and Career Hub" />
+                <DepartmentUpdatesTab departmentName="Job and Career Hub" />
               </div>
-
-              <DepartmentInquiryView 
-                departmentName="Jobs" 
-                title="Job and Career Hub Candidates & Placements" 
-                subtitle="Healthcare, IT, and Engineering candidate CVs and employer interview schedules."
-              />
-
-              <ContentCreationTool departmentName="Job and Career Hub" />
-              <DepartmentApprovalsTab departmentName="Job and Career Hub" />
-              <DepartmentUpdatesTab departmentName="Job and Career Hub" />
-            </div>
+            </DepartmentHubSubNav>
           )}
 
           {/* REWARDS PLAN HUB (Core Operations & Accounts-Marketing Synergy) */}

@@ -1070,6 +1070,87 @@ export const getGlobalCourses = (): GlobalCourse[] => {
         { id: 's13', name: 'Dr. Anjali Nair', email: 'dr.anjali@med.de', status: 'In Class', joinedAt: '09:00 AM', attendanceScore: 99 }
       ],
       courseStructure: 'Unit 1: Doctor-Patient Consultations\nUnit 2: Medical History (Anamnese) Intake\nUnit 3: Clinical Documentation (Arztbrief)\nUnit 4: Mock Examination Panels' 
+    },
+    {
+      id: '7',
+      name: 'French Language (DELF / DALF A1–B2)',
+      top_title: 'French Language & European Proficiency',
+      subtitle: 'CEFR Standard Certification for Corporate Mobility, European Careers & Canada Immigration',
+      show_in_sub_nav: false,
+      displayPosition: 7,
+      viewType: 'Blocks View',
+      staff: 'Claire Dubois (DELF Certified Specialist)',
+      chapter: '20',
+      duration: '14 Weeks',
+      methods: 'Human-Led Group Classes + Video & AI Labs',
+      pathId: '1',
+      pathName: 'Human-Led Interactive & AI Hybrid',
+      batchId: '2',
+      batchName: 'Evening Intensive Batch',
+      materials: 'DELF/DALF Workbooks & Audio Comprehension Packs',
+      fee: '$189',
+      students: '75',
+      category: 'Foreign Languages',
+      subCategory: 'French Language (DELF/DALF)',
+      libraryType: 'AI',
+      enrolledStudentsList: [
+        { id: 's14', name: 'Sneha Roy', email: 'sneha.roy@corp.fr', status: 'In Class', joinedAt: '18:00 PM', attendanceScore: 94 }
+      ],
+      courseStructure: 'Level 1: Phonetics, Greetings & Daily French Vocabulary\nLevel 2: Tenses, Professional Dialogues & Workplace French\nLevel 3: B1/B2 Written Composition & Oral Simulation\nLevel 4: Official DELF Exam Prep & Mock Certification'
+    },
+    {
+      id: '8',
+      name: 'Engineering Crash Course (Electrical & Mechatronics)',
+      top_title: 'Fast-Track Engineering Pilot & Hands-on Labs',
+      subtitle: 'Industrial Automation, EV Powertrains, Solar Infrastructure & PLC Diagnostics',
+      show_in_sub_nav: false,
+      displayPosition: 8,
+      viewType: 'Blocks View',
+      staff: 'Er. Rajesh Kumar (Lead Automation Engineer)',
+      chapter: '16',
+      duration: '8 Weeks',
+      methods: 'Slide + AI Interactive Learning with Hardware Simulator',
+      pathId: '3',
+      pathName: 'Practical Technical Pilot Pathway',
+      batchId: '3',
+      batchName: 'Weekend Tech Bootcamp',
+      materials: 'PLC Ladder Logic Toolkits, Solar Schematics & EV Wiring Blueprints',
+      fee: '$349',
+      students: '60',
+      category: 'Engineering & Technical',
+      subCategory: 'Engineering Crash Course',
+      libraryType: 'TUTOR',
+      enrolledStudentsList: [
+        { id: 's15', name: 'Nikhil Thomas', email: 'nikhil.eng@tech.in', status: 'In Class', joinedAt: '14:00 PM', attendanceScore: 97 }
+      ],
+      courseStructure: 'Module 1: Industrial Electrical Systems & Safety Standards\nModule 2: Solar Photovoltaic (PV) Design & Inverter Grid Integration\nModule 3: EV Motor Drives & Battery Management Systems (BMS)\nModule 4: PLC Programming & European Equipment Maintenance'
+    },
+    {
+      id: '9',
+      name: 'Competitive Exam Preparation (GATE / GRE / IELTS)',
+      top_title: 'Elite Competitive Exam Mastery',
+      subtitle: 'Target High Percentile: Problem Sets, Speed Strategies & IntelliCoach AI Simulations',
+      show_in_sub_nav: false,
+      displayPosition: 9,
+      viewType: 'Blocks View',
+      staff: 'Prof. R. Venkat (GATE All India Rank 14)',
+      chapter: '28',
+      duration: '16 Weeks',
+      methods: 'IntelliCoach AI Adaptive Path [Video + AI + Live Tests]',
+      pathId: '1',
+      pathName: 'IntelliCoach AI Adaptive Path',
+      batchId: '1',
+      batchName: 'Morning Batch A1',
+      materials: 'Previous 20-Year Solved Papers & AI Real-Time Doubt Solving',
+      fee: '$229',
+      students: '130',
+      category: 'Competitive Exam Prep',
+      subCategory: 'GATE / GRE / Competitive Exams',
+      libraryType: 'AI',
+      enrolledStudentsList: [
+        { id: 's16', name: 'Gautam Menon', email: 'gautam.m@gate.edu', status: 'In Class', joinedAt: '09:00 AM', attendanceScore: 100 }
+      ],
+      courseStructure: 'Phase 1: High-Weightage Core Conceptual Fundamentals\nPhase 2: Numerical Accuracy & Advanced Analytical Shortcuts\nPhase 3: Topic-wise Timed Quizzes with AI Error Analytics\nPhase 4: Full-Length All India Mock Simulations'
     }
   ];
   localStorage.setItem('ilas_courses', JSON.stringify(seed));

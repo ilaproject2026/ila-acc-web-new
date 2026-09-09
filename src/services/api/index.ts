@@ -9,3 +9,4 @@ export * from './staff.service';
 export * from './inquiry.service';
 export * from './task.service';
 export * from './education.service';
+export * from './consultant.service';

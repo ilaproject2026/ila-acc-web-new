@@ -61,6 +61,16 @@ export const navItems: NavItem[] = [
       { label: 'AI Resume Match', href: '#jobs', description: 'Smart job matching portal' },
     ],
   },
+  {
+    label: 'Rewards',
+    href: '#rewards',
+    children: [
+      { label: 'Junior Consultant Network', href: '#rewards#ecosystem-catalog', description: 'Join and earn commissions & points' },
+      { label: 'Digital ID Card & Kit', href: '#rewards#junior-consultant-card', description: 'Verified credential & starter kit' },
+      { label: 'Referral Cashback Catalog', href: '#rewards#ecosystem-catalog', description: '10–50 pts & cash incentives' },
+      { label: 'Work Experience Certification', href: '#rewards#tiers-tours', description: 'Official Marketing Consultant letter' },
+    ],
+  },
   { label: 'Apply Now 🎯', href: '#applications' },
 ]
 

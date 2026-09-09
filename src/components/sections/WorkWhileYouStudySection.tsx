@@ -1,63 +1,81 @@
-import { Laptop, Ship, DollarSign, Clock } from 'lucide-react'
+import { Briefcase, Globe2, Cpu, Crown, Clock, ArrowRight } from 'lucide-react'
 
 const pathways = [
   {
-    icon: DollarSign,
-    title: 'Work While You Study',
-    description: 'Structured work-study programs that let you gain international experience while earning a competitive income.',
-    highlights: ['Part-time work authorization', 'Flexible schedules', 'Mentorship included'],
+    icon: Briefcase,
+    title: 'Work While You Learn in India',
+    description: 'Corporate internships, IT development pilots, and commercial tasks in India with ₹10k–₹30k/mo stipend. Zero career gap.',
+    highlights: ['Stipend ₹10k–₹30k/mo', 'Live corporate projects', '1-Year lifetime experience proof'],
+    link: '#work-while-you-study-page#how-to-join'
   },
   {
-    icon: Laptop,
-    title: 'IT Careers',
-    description: 'Fast-track pathways into software development, cloud engineering, cybersecurity, and data science roles globally.',
-    highlights: ['Industry certifications', 'Project-based learning', 'Direct employer connections'],
+    icon: Globe2,
+    title: 'Part time While You Study Abroad',
+    description: 'End-to-End Student Services: airport pickup, WG accommodation, documentation (Anmeldung/Expatrio), and part-time job placement.',
+    highlights: ['Airport reception & transit', 'Guaranteed room finding', 'Legal 20 hrs/week student jobs'],
+    link: '#work-while-you-study-page#earn-in-germany'
   },
   {
-    icon: Ship,
-    title: 'Import-Export Careers',
-    description: 'Build a career in international trade — logistics coordination, customs compliance, and supply chain management.',
-    highlights: ['Trade compliance training', 'Global network access', 'Entrepreneur support'],
+    icon: Cpu,
+    title: 'German Project Onboarding Pathway',
+    description: 'Intensive German language + technical/admin training with company toolkits provided. Win local client pilots and relocate to Germany.',
+    highlights: ['Language + Tech skills', 'Company toolkits provided', 'Direct German employer sponsor'],
+    link: '#work-while-you-study-page#german-pathway'
+  },
+  {
+    icon: Crown,
+    title: 'Rewards Plans & Junior Consultant',
+    description: 'Select your role (Junior Consultant) and choose which vertical to promote to earn commissions, cash payouts, and official certification.',
+    highlights: ['Earn 10–50 pts per referral', 'Monthly cash unlock (1,000 pts)', 'Official Marketing Consultant letter'],
+    link: '#rewards'
   },
 ]
 
 export default function WorkWhileYouStudySection() {
   return (
-    <section id="earn-learn" className="section-padding">
+    <section id="earn-learn" className="section-padding bg-slate-50">
       <div className="container-max">
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <span className="text-sm font-semibold text-brand-600 uppercase tracking-wider">Work While You Study & Careers</span>
-          <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mt-3 mb-4">
-            Learn, Earn & Grow Simultaneously
+        {/* Core Concept Banner */}
+        <div className="mb-14 p-8 bg-gradient-to-r from-slate-900 via-brand-900 to-indigo-950 rounded-3xl text-white shadow-xl text-center max-w-4xl mx-auto border border-slate-800">
+          <span className="text-xs font-black uppercase tracking-widest text-amber-400 bg-amber-400/10 px-3 py-1 rounded-full border border-amber-400/20">
+            ILA Global Philosophy
+          </span>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black mt-3 mb-3 leading-tight">
+            "Do not waste your time just studying; gather international experience and earn while you learn."
           </h2>
-          <p className="text-slate-600 leading-relaxed">
-            Our earn-while-you-learn model and specialized career tracks in IT and import-export
-            give you practical skills and real income from day one.
+          <p className="text-slate-300 text-sm max-w-2xl mx-auto">
+            Practical skills, international exposure, and verified earnings from day one through our 4 structured global pathways.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          {pathways.map(({ icon: Icon, title, description, highlights }) => (
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {pathways.map(({ icon: Icon, title, description, highlights, link }) => (
             <div
               key={title}
-              className="relative bg-white rounded-2xl p-8 shadow-sm border border-slate-100 card-hover overflow-hidden"
+              className="relative bg-white rounded-2xl p-6 shadow-sm border border-slate-200 card-hover flex flex-col justify-between"
             >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-brand-50 rounded-bl-full opacity-50" />
-              <div className="relative">
-                <div className="w-12 h-12 rounded-xl bg-brand-700 flex items-center justify-center mb-5">
-                  <Icon className="w-6 h-6 text-white" />
+              <div>
+                <div className="w-12 h-12 rounded-xl bg-brand-700 text-white flex items-center justify-center mb-4 shadow-sm">
+                  <Icon className="w-6 h-6" />
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-3">{title}</h3>
-                <p className="text-slate-600 text-sm leading-relaxed mb-5">{description}</p>
-                <ul className="space-y-2">
+                <h3 className="text-base font-extrabold text-slate-900 mb-2 leading-snug">{title}</h3>
+                <p className="text-slate-600 text-xs leading-relaxed mb-4">{description}</p>
+                <ul className="space-y-1.5 mb-6">
                   {highlights.map((h) => (
-                    <li key={h} className="flex items-center gap-2 text-sm text-slate-700">
-                      <Clock className="w-3.5 h-3.5 text-brand-500 shrink-0" />
+                    <li key={h} className="flex items-center gap-1.5 text-xs text-slate-700 font-medium">
+                      <Clock className="w-3.5 h-3.5 text-brand-600 shrink-0" />
                       {h}
                     </li>
                   ))}
                 </ul>
               </div>
+              <a
+                href={link}
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-700 hover:text-brand-800 transition-colors pt-2 border-t border-slate-100"
+              >
+                <span>Explore Details</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </a>
             </div>
           ))}
         </div>

@@ -402,6 +402,33 @@ export default function JobsPage() {
                       </div>
                     ))}
                   </div>
+                  {/* Visa Conversion Hotspot for Candidates Seeking Direct Relocation */}
+                  <div className="mt-3 p-3.5 bg-gradient-to-r from-amber-400 to-amber-500 rounded-2xl text-slate-950 shadow-md space-y-2 border border-amber-300">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[9px] font-black uppercase bg-slate-950 text-amber-300 px-2 py-0.5 rounded">
+                        Visa Conversion Hotspot
+                      </span>
+                      <span className="text-[10px] font-black">🇩🇪 Chancenkarte Fast-Track</span>
+                    </div>
+                    <p className="text-xs font-black leading-snug">
+                      "Go directly to Germany to find your job — we assist with portal-based applications, Opportunity Card (Chancenkarte), and interview arrangements."
+                    </p>
+                    <div className="flex items-center gap-2 pt-1">
+                      <button
+                        onClick={() => navigateTo('#applications?tab=Visa (Germany: Opportunity Card)')}
+                        className="flex-1 py-1.5 bg-slate-950 hover:bg-slate-900 text-white rounded-xl text-[11px] font-black transition-all cursor-pointer flex items-center justify-center gap-1 shadow-sm"
+                      >
+                        <span>Apply Opportunity Card</span>
+                        <ArrowRight className="w-3 h-3 text-amber-400" />
+                      </button>
+                      <button
+                        onClick={() => navigateTo('#visa-page#opportunity-card')}
+                        className="px-2.5 py-1.5 bg-white/40 hover:bg-white/60 text-slate-950 rounded-xl text-[10px] font-black transition-all cursor-pointer whitespace-nowrap"
+                      >
+                        Points Matrix
+                      </button>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Bottom Action */}

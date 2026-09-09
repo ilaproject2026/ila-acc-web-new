@@ -215,6 +215,149 @@ export default function RewardsPage() {
       {/* 3. Main Magazine Content Area */}
       <div className="container-max mx-auto px-6 space-y-16 pb-20">
         
+        {/* ================= JUNIOR CONSULTANT DIGITAL ID CARD & POINT SYSTEM ================= */}
+        <section id="junior-consultant-card" className="scroll-mt-28">
+          <div className="bg-gradient-to-r from-slate-950 via-slate-900 to-indigo-950 rounded-[2.5rem] p-6 sm:p-10 text-white shadow-2xl border border-slate-800">
+            <div className="grid lg:grid-cols-12 gap-8 items-center">
+              
+              {/* Left Column: Digital ID Card Preview */}
+              <div className="lg:col-span-5 flex flex-col items-center">
+                <span className="text-[10px] font-black uppercase text-amber-400 bg-amber-400/10 px-3 py-1 rounded-full border border-amber-400/20 mb-4">
+                  Official Consultant Credential
+                </span>
+
+                {/* Digital Card */}
+                <div className="w-full max-w-sm bg-gradient-to-br from-slate-900 via-slate-850 to-brand-950 p-6 rounded-3xl border-2 border-amber-400/40 shadow-2xl relative overflow-hidden space-y-4">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-amber-400/10 rounded-full blur-2xl pointer-events-none" />
+                  
+                  {/* Top Bar */}
+                  <div className="flex justify-between items-start border-b border-white/10 pb-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-xl bg-amber-400 text-slate-950 font-black flex items-center justify-center text-xs shadow-sm">
+                        ILA
+                      </div>
+                      <div>
+                        <span className="text-[10px] font-black tracking-widest text-slate-300 block">ILA ACADEMY GLOBAL</span>
+                        <span className="text-[8px] text-amber-300 font-bold uppercase">Consultant Credential</span>
+                      </div>
+                    </div>
+                    <span className="text-[9px] font-black px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-400/30">
+                      ACTIVE VERIFIED
+                    </span>
+                  </div>
+
+                  {/* Member Details */}
+                  <div className="flex items-center gap-3.5 py-1">
+                    <div className="w-14 h-14 rounded-2xl bg-slate-800 border-2 border-amber-400/50 flex items-center justify-center text-amber-300 font-black text-lg shadow-inner">
+                      JC
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-black text-white">Aditya Sharma</h4>
+                      <span className="text-xs font-bold text-amber-300 block">Junior Consultant</span>
+                      <span className="text-[10px] font-mono text-slate-400">ID: ILA-JC-2026-8842</span>
+                    </div>
+                  </div>
+
+                  {/* Privileges & Points */}
+                  <div className="grid grid-cols-2 gap-2 bg-white/5 p-3 rounded-2xl border border-white/10 text-center">
+                    <div>
+                      <span className="text-[9px] font-bold text-slate-400 uppercase block">Active Points</span>
+                      <span className="text-sm font-black text-amber-300">680 PTS</span>
+                    </div>
+                    <div>
+                      <span className="text-[9px] font-bold text-slate-400 uppercase block">Monthly Tier</span>
+                      <span className="text-sm font-black text-emerald-400">68% to ₹15k Cash</span>
+                    </div>
+                  </div>
+
+                  {/* Card Footer */}
+                  <div className="flex justify-between items-center text-[9px] text-slate-400 pt-2 border-t border-white/10">
+                    <span>Authorized Marketing Executive</span>
+                    <span className="font-mono">VALID: 2026-2027</span>
+                  </div>
+                </div>
+
+                <div className="flex gap-2 mt-4">
+                  <button
+                    onClick={() => alert('Digital ID Card & Starter Kit downloaded to your device!')}
+                    className="px-4 py-2 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black rounded-xl text-xs transition-all cursor-pointer shadow-md"
+                  >
+                    Download Digital ID & Kit 🪪
+                  </button>
+                </div>
+              </div>
+
+              {/* Right Column: Points System & Work Experience Value */}
+              <div className="lg:col-span-7 space-y-5">
+                <div>
+                  <span className="text-[10px] font-black uppercase text-amber-400 tracking-wider">
+                    Tier & Point System
+                  </span>
+                  <h3 className="text-2xl sm:text-3xl font-black mt-1 text-white">
+                    Junior Consultant Point System & Work Certification
+                  </h3>
+                  <p className="text-xs sm:text-sm text-slate-300 mt-2 leading-relaxed font-medium">
+                    Every candidate enrolled in any ILA vertical receives dual-provisioning in our Rewards Program. Turn recommendations into verified points, cash rewards, and formal work experience.
+                  </p>
+                </div>
+
+                {/* Milestones Breakdown */}
+                <div className="grid sm:grid-cols-3 gap-3 text-xs">
+                  <div className="p-3.5 bg-white/5 rounded-2xl border border-white/10 space-y-1">
+                    <div className="text-base font-black text-amber-300">10 Points</div>
+                    <div className="font-bold text-white text-xs">Per Generated Inquiry</div>
+                    <p className="text-[10px] text-slate-400">Awarded immediately when your lead submits their first intake enquiry.</p>
+                  </div>
+
+                  <div className="p-3.5 bg-white/5 rounded-2xl border border-white/10 space-y-1">
+                    <div className="text-base font-black text-emerald-400">50 Points</div>
+                    <div className="font-bold text-white text-xs">Per Successful Enrollment</div>
+                    <p className="text-[10px] text-slate-400">Credited when your referral converts into an enrolled candidate.</p>
+                  </div>
+
+                  <div className="p-3.5 bg-white/5 rounded-2xl border border-white/10 space-y-1">
+                    <div className="text-base font-black text-amber-400">1,000 Points / Mo</div>
+                    <div className="font-bold text-white text-xs">Cash Reward & Letter</div>
+                    <p className="text-[10px] text-slate-400">Unlocks financial cash commission + official Marketing Executive experience letter.</p>
+                  </div>
+                </div>
+
+                {/* Progress toward 1,000 pts target */}
+                <div className="p-4 bg-white/5 rounded-2xl border border-white/10 space-y-2">
+                  <div className="flex justify-between text-xs font-bold">
+                    <span className="text-slate-300">Current Monthly Progress (Threshold: 1,000 PTS)</span>
+                    <span className="text-amber-400 font-mono">680 / 1,000 PTS</span>
+                  </div>
+                  <div className="w-full h-3 bg-slate-800 rounded-full overflow-hidden">
+                    <div className="h-full bg-gradient-to-r from-amber-500 to-amber-300 rounded-full transition-all duration-500" style={{ width: '68%' }} />
+                  </div>
+                  <div className="flex justify-between text-[10px] text-slate-400">
+                    <span>320 points needed to unlock next cash commission cycle</span>
+                    <span className="text-emerald-400 font-bold">Payout: ₹15,000 / €200</span>
+                  </div>
+                </div>
+
+                {/* Career Progression & Certificate */}
+                <div className="p-4 rounded-2xl bg-amber-400/10 border border-amber-400/20 flex flex-wrap justify-between items-center gap-3">
+                  <div>
+                    <h4 className="text-xs font-black text-amber-300">Official Work Experience Letter & Career Progression</h4>
+                    <p className="text-[11px] text-slate-300 mt-0.5">
+                      Participants who consistently meet monthly targets receive verified tenure letters recognizing them as Marketing Executives with ILA Academy. Outstanding performers transition to permanent or part-time freelance consultant roles.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => alert('Work Experience Letter Certificate generated! Verified with ILA Corporate Registry.')}
+                    className="px-4 py-2 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black rounded-xl text-xs transition-all cursor-pointer whitespace-nowrap shadow-sm"
+                  >
+                    View Experience Letter Preview 📜
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
         {/* ================= 1. REWARDS CATALOG ACROSS ALL SERVICES ================= */}
         <section id="ecosystem-catalog" className="scroll-mt-28">
           <div className="text-center max-w-3xl mx-auto mb-10">

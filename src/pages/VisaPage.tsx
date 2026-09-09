@@ -97,6 +97,7 @@ const benefitItems = [
 
 export default function VisaPage() {
   const [selectedVisaId, setSelectedVisaId] = useState(visaCategories[0].id);
+  const [targetCountry, setTargetCountry] = useState('Germany');
 
   const navigateTo = (url: string) => { 
     window.location.hash = url; 
@@ -112,6 +113,42 @@ export default function VisaPage() {
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
   };
+
+  // Dynamic Rule Matrix from Central Documentation AI Engine
+  const countryRules: Record<string, { blockedFund: string; queueTime: string; primaryAuthority: string; keyChecklist: string[] }> = {
+    'Germany': {
+      blockedFund: '€11,900 / year (Sperrkonto via Expatrio/Coracle)',
+      queueTime: '15 - 28 Days (VFS Fast-Track via APS)',
+      primaryAuthority: 'Ausländerbehörde & German Missions in India',
+      keyChecklist: ['APS India Verification Certificate', 'Goethe/Telc B1-B2 Language Proof', 'Public Health Insurance (TK/Barmer/AOK)', 'Blocked Account Confirmation']
+    },
+    'USA': {
+      blockedFund: '$12,000 – $25,000 (Form I-20 Financial Affidavit)',
+      queueTime: '30 - 45 Days (DS-160 & US Consulate Slots)',
+      primaryAuthority: 'USCIS & US Embassy Consular Section',
+      keyChecklist: ['Official SEVIS I-20 Form', 'TOEFL / IELTS / GRE Score Report', 'DS-160 Barcode & Visa Fee Receipt', 'Proof of Liquid Bank Funds & Ties to Home Country']
+    },
+    'UK': {
+      blockedFund: '£12,006 (Outside London) / £15,600 (Inside London)',
+      queueTime: '15 - 21 Days (UKVI Priority Corridor)',
+      primaryAuthority: 'UK Visas and Immigration (UKVI)',
+      keyChecklist: ['Confirmation of Acceptance for Studies (CAS)', 'TB (Tuberculosis) Clearance Certificate', 'Immigration Health Surcharge (IHS) Payment', '28-Day Bank Statement Audit']
+    },
+    'South Africa': {
+      blockedFund: 'ZAR 120,000 (Repatriation Guarantee & Living Means)',
+      queueTime: '20 - 35 Days (VFS Global SA Desk)',
+      primaryAuthority: 'Department of Home Affairs (DHA)',
+      keyChecklist: ['SAQA Qualification Equivalency Evaluation', 'Medical & Radiological Chest X-Ray Reports', 'Police Clearance Certificate (Apostilled)', 'Official Institution Acceptance Letter']
+    },
+    'Canada': {
+      blockedFund: 'CAD $20,635 (Guaranteed Investment Certificate - GIC)',
+      queueTime: '25 - 40 Days (SDS Fast-Track)',
+      primaryAuthority: 'Immigration, Refugees and Citizenship Canada (IRCC)',
+      keyChecklist: ['Letter of Acceptance (LOA) from DLI', 'GIC Certificate with Scotiabank/CIBC', 'Upfront Medical Examination (IME)', 'IELTS Academic Minimum 6.0 Band']
+    }
+  };
+
+  const currentRule = countryRules[targetCountry] || countryRules['Germany'];
 
   return (
     <div className="pt-20 bg-slate-50 min-h-screen">
@@ -179,6 +216,83 @@ export default function VisaPage() {
         
         {/* Visa Category Grid Selection */}
         <section>
+          {/* Target Country & Real-time AI Regulation Selector */}
+          <div className="mb-12 p-6 sm:p-8 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-3xl text-white shadow-xl border border-slate-800 space-y-6">
+            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4">
+              <div>
+                <span className="text-[10px] font-black uppercase bg-amber-400 text-slate-950 px-2.5 py-1 rounded-full">
+                  Central Visa & Documentation AI Engine
+                </span>
+                <h3 className="text-xl sm:text-2xl font-black mt-2">Country & Category Dynamic Regulatory Intake</h3>
+                <p className="text-xs text-slate-300 mt-1">Real-time tracking of global immigration regulations, financial thresholds, and visa interview queues.</p>
+              </div>
+
+              {/* Country Picker Tabs */}
+              <div className="flex items-center gap-2 flex-wrap">
+                {['Germany', 'USA', 'UK', 'South Africa', 'Canada'].map(c => (
+                  <button
+                    key={c}
+                    onClick={() => setTargetCountry(c)}
+                    className={`px-3.5 py-2 rounded-xl text-xs font-black transition-all cursor-pointer ${
+                      targetCountry === c
+                        ? 'bg-amber-400 text-slate-950 shadow-md'
+                        : 'bg-white/10 text-white hover:bg-white/20'
+                    }`}
+                  >
+                    {c === 'Germany' ? '🇩🇪 Germany' :
+                     c === 'USA' ? '🇺🇸 USA' :
+                     c === 'UK' ? '🇬🇧 UK' :
+                     c === 'South Africa' ? '🇿🇦 South Africa' : '🇨🇦 Canada'}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Dynamic Real-time Regulations Display */}
+            <div className="grid sm:grid-cols-3 gap-4 text-xs">
+              <div className="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-1">
+                <span className="text-[10px] uppercase font-bold text-amber-300">Mandatory Proof of Funds</span>
+                <div className="text-sm font-black text-white">{currentRule.blockedFund}</div>
+                <p className="text-[10px] text-slate-400">Verified financial escrow required prior to consular interview.</p>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-1">
+                <span className="text-[10px] uppercase font-bold text-emerald-400">Embassy Queue & Processing</span>
+                <div className="text-sm font-black text-white">{currentRule.queueTime}</div>
+                <p className="text-[10px] text-slate-400">Consular Authority: {currentRule.primaryAuthority}</p>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-1 flex flex-col justify-between">
+                <div>
+                  <span className="text-[10px] uppercase font-bold text-indigo-300">Fast-Track Compliance</span>
+                  <div className="text-sm font-black text-white">100% Embassy Clearance Support</div>
+                </div>
+                <button
+                  onClick={() => navigateTo(`#applications?tab=Visa (${targetCountry}: ${encodeURIComponent(selectedVisa.title)})`)}
+                  className="w-full py-2 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black rounded-xl text-xs flex items-center justify-center gap-1.5 cursor-pointer shadow-md transition-all mt-2"
+                >
+                  <span>Launch Application for {targetCountry}</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Checklist items */}
+            <div className="pt-2 border-t border-white/10">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
+                Live AI Document Checklist for {targetCountry}:
+              </span>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-2">
+                {currentRule.keyChecklist.map((item, idx) => (
+                  <div key={idx} className="flex items-center gap-2 p-2 rounded-xl bg-white/5 border border-white/10 text-[11px] text-slate-200">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                    <span className="leading-snug">{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
           <div className="text-center max-w-3xl mx-auto mb-12">
             <span className="text-xs font-black tracking-widest text-brand-700 uppercase bg-brand-50 px-3.5 py-1 rounded-full border border-brand-200">
               Immigration Pathways

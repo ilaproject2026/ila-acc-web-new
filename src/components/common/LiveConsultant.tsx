@@ -15,6 +15,7 @@ import type { ChatMessage } from '../../types'
 import {
   consultantWelcome,
   getConsultantReply,
+  askGeminiConsultant,
   topicLabels,
   topicStarters,
   type ConsultantTopic,
@@ -55,26 +56,49 @@ export default function LiveConsultant() {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, typing])
 
-  const sendMessage = (text: string, selectedTopic?: ConsultantTopic) => {
+  const sendMessage = async (text: string, selectedTopic?: ConsultantTopic) => {
     if (!text.trim()) return
     const activeTopic = selectedTopic ?? topic
+    const userMsg: ChatMessage = {
+      id: crypto.randomUUID(),
+      role: 'user',
+      content: text,
+      timestamp: new Date(),
+    }
 
-    setMessages((prev) => [
-      ...prev,
-      { id: crypto.randomUUID(), role: 'user', content: text, timestamp: new Date() },
-    ])
+    const currentHistory = [...messages, userMsg]
+    setMessages(currentHistory)
     setInput('')
     setTyping(true)
 
-    setTimeout(() => {
-      const reply = getConsultantReply(activeTopic, text, replyCount)
+    try {
+      const result = await askGeminiConsultant(
+        text,
+        currentHistory.map((m) => ({ role: m.role, content: m.content })),
+        activeTopic,
+        replyCount
+      )
       setReplyCount((c) => c + 1)
-      setTyping(false)
       setMessages((prev) => [
         ...prev,
-        { id: crypto.randomUUID(), role: 'assistant', content: reply, timestamp: new Date() },
+        {
+          id: crypto.randomUUID(),
+          role: 'assistant',
+          content: result.reply,
+          actions: result.actions,
+          timestamp: new Date(),
+        },
       ])
-    }, 900 + Math.random() * 600)
+    } catch {
+      const fallback = getConsultantReply(activeTopic, text, replyCount)
+      setReplyCount((c) => c + 1)
+      setMessages((prev) => [
+        ...prev,
+        { id: crypto.randomUUID(), role: 'assistant', content: fallback, timestamp: new Date() },
+      ])
+    } finally {
+      setTyping(false)
+    }
   }
 
   const selectTopic = (t: ConsultantTopic) => {
@@ -139,7 +163,7 @@ export default function LiveConsultant() {
           {/* Messages */}
           <div className="flex-1 overflow-y-auto p-3 space-y-3 min-h-[280px] max-h-[360px]">
             {messages.map((msg) => (
-              <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+              <div key={msg.id} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
                 <div
                   className={`max-w-[88%] rounded-2xl px-3 py-2 text-xs leading-relaxed ${
                     msg.role === 'user'
@@ -149,6 +173,20 @@ export default function LiveConsultant() {
                 >
                   {renderContent(msg.content)}
                 </div>
+                {msg.actions && msg.actions.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 mt-1.5 max-w-[90%]">
+                    {msg.actions.map((act, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => sendMessage(act)}
+                        className="px-2.5 py-1 bg-white border border-brand-200 text-brand-700 hover:bg-brand-50 rounded-full text-[10px] font-medium shadow-xs transition-colors"
+                      >
+                        {act} →
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             ))}
             {typing && (

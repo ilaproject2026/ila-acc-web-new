@@ -19,6 +19,7 @@ import {
   FileText,
   Code
 } from 'lucide-react';
+import EligibilityChecker from '../components/common/EligibilityChecker';
 
 export default function StudyAbroadPage() {
   const [activeNav, setActiveNav] = useState('public-universities');
@@ -90,6 +91,7 @@ export default function StudyAbroadPage() {
       <div className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200 py-4 mb-12 transition-all duration-300">
         <div className="container-max mx-auto px-6 flex justify-start md:justify-center gap-8 overflow-x-auto hide-scrollbar">
           {[
+            { id: 'eligibility-checker', label: 'Eligibility Check & Matching' },
             { id: 'public-universities', label: 'Public Universities (€0 Tuition)' },
             { id: 'private-universities', label: 'Private Universities' },
             { id: 'ausbildung-program', label: 'Ausbildung (Paid Dual Study)' },
@@ -111,6 +113,20 @@ export default function StudyAbroadPage() {
       {/* 3. Main Body Sections */}
       <div className="container-max mx-auto px-6 space-y-28 pb-20">
         
+        {/* ================= ELIGIBILITY CHECK & COURSE LIBRARY MATCHING ================= */}
+        <section id="eligibility-checker" className="scroll-mt-32">
+          <div className="text-center max-w-3xl mx-auto mb-8">
+            <span className="text-xs font-black tracking-widest text-brand-700 uppercase bg-brand-50 px-3.5 py-1 rounded-full border border-brand-200">
+              AI Course & University Matching Tool
+            </span>
+            <h2 className="text-3xl md:text-4xl font-black text-slate-900 mt-2 mb-2">Check Your Study Abroad Eligibility</h2>
+            <p className="text-slate-600 text-sm">
+              Cross-reference your academic background, degree, and language proficiency against our pre-loaded library of public university courses and scholarship opportunities with €0 tuition guarantee.
+            </p>
+          </div>
+          <EligibilityChecker />
+        </section>
+
         {/* ================= GERMAN PUBLIC UNIVERSITIES ================= */}
         <section id="public-universities" className="scroll-mt-32">
           <div className="text-center max-w-3xl mx-auto mb-12">
