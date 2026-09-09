@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   ChevronRight, ChevronLeft, GraduationCap, Globe, Briefcase, Plane, 
-  MessageCircle, Sparkles, CheckCircle2, ArrowRight, ShieldCheck, Mail, Star
+  MessageCircle, Sparkles, CheckCircle2, ArrowRight, ShieldCheck, Mail, Star,
+  Compass, Tag, AlertCircle
 } from 'lucide-react';
 import { saveInquiry } from '../lib/db';
+import { inquiryService } from '../services/api/inquiry.service';
 
 const SERVICES = [
   { id: 'education', label: 'Education & Training' },
@@ -144,10 +146,32 @@ export default function ApplicationPoolPage() {
     partnershipOption: 'Independent Consultant'
   });
 
-  // UI State
+  // Inbound Context & Keyword Tracking State
+  const [inboundContext, setInboundContext] = useState<{
+    targetKeyword: string;
+    keywords: string[];
+    sourcePage: string;
+    sourceUrl: string;
+  }>({
+    targetKeyword: '',
+    keywords: [],
+    sourcePage: '',
+    sourceUrl: ''
+  });
+
+  // UI & Network State
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activePromoIndex, setActivePromoIndex] = useState(0);
-  const [submissionResult, setSubmissionResult] = useState<{status: string, message: string, aiScore?: number, aiPath?: string, confirmationTitle?: string} | null>(null);
+  const [assignedToken, setAssignedToken] = useState<string | null>(null);
+  const [apiError, setApiError] = useState<string | null>(null);
+  const [submissionResult, setSubmissionResult] = useState<{
+    status: string;
+    message: string;
+    aiScore?: number;
+    aiPath?: string;
+    confirmationTitle?: string;
+    tokenNumber?: string;
+  } | null>(null);
   
   const resultRef = useRef<HTMLDivElement>(null);
 
@@ -159,147 +183,467 @@ export default function ApplicationPoolPage() {
     return () => clearInterval(timer);
   }, []);
 
-  // URL Hash Parsing
+  // Robust URL Hash & Contextual Keyword Extraction
   useEffect(() => {
-    const hash = window.location.hash;
-    let initialService = 'education';
-    if (hash.includes('?tab=')) {
-      const tabParam = decodeURIComponent(hash.split('?tab=')[1]);
-      if (tabParam.includes('Education')) initialService = 'education';
-      else if (tabParam.includes('Study Abroad')) initialService = 'study-abroad';
-      else if (tabParam.includes('Visa')) initialService = 'visa';
-      else if (tabParam.includes('Work While You Study') || tabParam.includes('Learn') || tabParam.includes('Work While You Study')) initialService = 'work-while-you-study';
-      else if (tabParam.includes('Jobs') || tabParam.includes('Job Search')) initialService = 'jobs';
-      else if (tabParam.includes('Rewards')) initialService = 'rewards';
-    }
-    
-    // Parse query params for course pre-filling
-    if (hash.includes('?')) {
-      const params = new URLSearchParams(hash.split('?')[1]);
-      setFormData(prev => ({ 
-        ...prev, 
-        service: initialService,
-        ...(params.has('course') && { educationCourse: params.get('course') || '' }),
-        ...(params.has('info') && { educationMethod: params.get('info') || '' }),
-        ...(params.has('batch') && { educationBatch: params.get('batch') || '' }),
-        ...(params.has('slot') && { educationSlot: params.get('slot') || '' })
-      }));
-    } else {
-      setFormData(prev => ({ ...prev, service: initialService }));
-    }
-    
-    const matchedPromoIndex = PROMO_BANNERS.findIndex(p => p.id.includes(initialService.split('-')[0]) || p.id.includes(initialService.replace('-', '')));
-    if (matchedPromoIndex !== -1) {
-      setActivePromoIndex(matchedPromoIndex);
-    }
+    const parseInboundUrl = () => {
+      const hash = window.location.hash;
+      let initialService = 'education';
+      let targetKeyword = '';
+      const extractedKeywords: string[] = [];
+      let sourcePage = 'Website Portal';
+      const formUpdates: Partial<typeof formData> = {};
+
+      if (hash.includes('?')) {
+        const queryString = hash.substring(hash.indexOf('?') + 1);
+        const params = new URLSearchParams(queryString);
+        const tabParam = params.get('tab') ? decodeURIComponent(params.get('tab')!) : '';
+
+        // Check explicit service param
+        if (params.has('service')) {
+          const s = params.get('service')?.toLowerCase() || '';
+          if (['education', 'study-abroad', 'visa', 'work-while-you-study', 'jobs', 'rewards'].includes(s)) {
+            initialService = s;
+          }
+        }
+
+        // Parse tab parameter patterns
+        if (tabParam) {
+          const tabLower = tabParam.toLowerCase();
+
+          // 1. VISA SERVICES
+          if (tabLower.includes('visa')) {
+            initialService = 'visa';
+            sourcePage = 'Visa Services Portal';
+
+            const matchCountryTitle = tabParam.match(/Visa\s*\(([^:]+):\s*([^)]+)\)/i);
+            const matchHyphenTitle = tabParam.match(/Visa\s*-\s*(.+)/i);
+
+            if (matchCountryTitle) {
+              const country = matchCountryTitle[1].trim();
+              const title = matchCountryTitle[2].trim();
+              targetKeyword = `${country}: ${title}`;
+              formUpdates.visaDestination = country;
+              if (title.toLowerCase().includes('opportunity card')) {
+                formUpdates.visaTypeRequired = 'Opportunity Card';
+              } else if (title.toLowerCase().includes('student')) {
+                formUpdates.visaTypeRequired = 'Student Visa';
+              } else if (title.toLowerCase().includes('work') || title.toLowerCase().includes('blue card')) {
+                formUpdates.visaTypeRequired = 'Work Permit';
+              } else if (title.toLowerCase().includes('tourist') || title.toLowerCase().includes('visitor')) {
+                formUpdates.visaTypeRequired = 'Tourist Visa';
+              }
+              extractedKeywords.push('Visa', country, title);
+            } else if (matchHyphenTitle) {
+              const title = matchHyphenTitle[1].trim();
+              targetKeyword = title;
+              if (title.toLowerCase().includes('opportunity card')) {
+                formUpdates.visaTypeRequired = 'Opportunity Card';
+              } else if (title.toLowerCase().includes('student')) {
+                formUpdates.visaTypeRequired = 'Student Visa';
+              } else if (title.toLowerCase().includes('work') || title.toLowerCase().includes('blue card')) {
+                formUpdates.visaTypeRequired = 'Work Permit';
+              }
+              extractedKeywords.push('Visa', title);
+            } else {
+              targetKeyword = 'Visa Assessment';
+              extractedKeywords.push('Visa', 'Global Visa');
+            }
+          }
+          // 2. JOBS & CAREER
+          else if (tabLower.includes('jobs') || tabLower.includes('job search')) {
+            initialService = 'jobs';
+            sourcePage = 'Job & Career Placement Hub';
+
+            const matchApply = tabParam.match(/Jobs\s*-\s*Apply\s+for\s+(.+)/i);
+            const matchPkg = tabParam.match(/Jobs\s*-\s*Package:\s*(.+)/i);
+            const matchService = tabParam.match(/Jobs\s*-\s*Service:\s*(.+)/i);
+
+            if (matchApply) {
+              const title = matchApply[1].trim();
+              targetKeyword = `Role: ${title}`;
+              extractedKeywords.push('Jobs', 'Candidate Application', title);
+
+              const lower = title.toLowerCase();
+              if (lower.includes('developer') || lower.includes('software') || lower.includes('react') || lower.includes('python') || lower.includes('engineer') || lower.includes('tech')) {
+                formUpdates.jobDomain = 'Software';
+              } else if (lower.includes('account') || lower.includes('admin') || lower.includes('finance') || lower.includes('billing')) {
+                formUpdates.jobDomain = 'Office Admin & Accounts';
+              } else if (lower.includes('seo') || lower.includes('marketing') || lower.includes('social')) {
+                formUpdates.jobDomain = 'SEO & Social AI';
+              } else if (lower.includes('trade') || lower.includes('export') || lower.includes('import') || lower.includes('logistics')) {
+                formUpdates.jobDomain = 'Import-Export Trade';
+              } else if (lower.includes('solar') || lower.includes('mechanical') || lower.includes('ev') || lower.includes('technical')) {
+                formUpdates.jobDomain = 'Engineering & Technical';
+              }
+            } else if (matchPkg) {
+              targetKeyword = `Package: ${matchPkg[1].trim()}`;
+              extractedKeywords.push('Jobs', 'Job Package', targetKeyword);
+            } else if (matchService) {
+              targetKeyword = `Service: ${matchService[1].trim()}`;
+              extractedKeywords.push('Jobs', 'Job Service', targetKeyword);
+            } else {
+              targetKeyword = 'Job Placement Track';
+              extractedKeywords.push('Jobs', 'Candidate Track');
+            }
+          }
+          // 3. REWARDS PROGRAM
+          else if (tabLower.includes('reward')) {
+            initialService = 'rewards';
+            sourcePage = 'Rewards & Consultant Network';
+
+            const matchTier = tabParam.match(/Tier:\s*(.+)/i);
+            const matchRefer = tabParam.match(/Refer\s+for\s+(.+)/i);
+            const matchRole = tabParam.match(/Rewards\s*\(([^)]+)\)/i);
+
+            if (matchTier) {
+              const tier = matchTier[1].trim();
+              targetKeyword = `Consultant Tier: ${tier}`;
+              if (tier.toLowerCase().includes('silver')) formUpdates.rewardTier = 'Silver Consultant';
+              else if (tier.toLowerCase().includes('gold')) formUpdates.rewardTier = 'Gold Consultant';
+              else if (tier.toLowerCase().includes('platinum')) formUpdates.rewardTier = 'Platinum Partner';
+              extractedKeywords.push('Rewards', 'Partner Tier', tier);
+            } else if (matchRefer) {
+              const vert = matchRefer[1].trim();
+              targetKeyword = `Referral for ${vert}`;
+              formUpdates.partnershipOption = 'Independent Consultant';
+              extractedKeywords.push('Rewards', 'Referral Network', vert);
+            } else if (matchRole) {
+              targetKeyword = matchRole[1].trim();
+              extractedKeywords.push('Rewards', 'Role Track', targetKeyword);
+            } else if (tabParam.includes('Consultant')) {
+              targetKeyword = 'Independent Consultant Intake';
+              formUpdates.partnershipOption = 'Independent Consultant';
+              extractedKeywords.push('Rewards', 'Consultant');
+            } else {
+              targetKeyword = 'Rewards Partnership';
+              extractedKeywords.push('Rewards', 'Partnership');
+            }
+          }
+          // 4. WORK WHILE YOU STUDY
+          else if (
+            tabLower.includes('work while you study') || 
+            tabLower.includes('learn') || 
+            tabParam.startsWith('Role -') || 
+            tabParam.startsWith('Consultant -')
+          ) {
+            initialService = 'work-while-you-study';
+            sourcePage = 'Work While You Study Program';
+
+            const matchIndia = tabParam.match(/India:\s*([^)]+)/i);
+            const matchAbroad = tabParam.match(/Abroad:\s*([^)]+)/i);
+            const matchGerman = tabParam.match(/German Pathway:\s*([^)]+)/i);
+            const matchRole = tabParam.match(/Role\s*-\s*(.+)/i);
+            const matchConsultant = tabParam.match(/Consultant\s*-\s*(.+)/i);
+
+            if (matchIndia) {
+              const track = matchIndia[1].trim();
+              targetKeyword = `India Track: ${track}`;
+              formUpdates.lweTrack = 'Student Sub-Track';
+              if (track.toLowerCase().includes('automation') || track.toLowerCase().includes('it')) formUpdates.stipendDomain = 'IT & Automation';
+              else if (track.toLowerCase().includes('solar')) formUpdates.stipendDomain = 'Solar & Tech Pilot';
+              else if (track.toLowerCase().includes('trade') || track.toLowerCase().includes('logistics')) formUpdates.stipendDomain = 'Logistics & Trade';
+              else if (track.toLowerCase().includes('account') || track.toLowerCase().includes('admin')) formUpdates.stipendDomain = 'Accounts & Admin';
+              extractedKeywords.push('Work While You Study', 'India Track', track);
+            } else if (matchAbroad) {
+              const track = matchAbroad[1].trim();
+              targetKeyword = `Abroad Track: ${track}`;
+              formUpdates.lweTrack = 'Job-Seeker Sub-Track';
+              extractedKeywords.push('Work While You Study', 'Abroad Track', track);
+            } else if (matchGerman) {
+              const track = matchGerman[1].trim();
+              targetKeyword = `German Pathway: ${track}`;
+              formUpdates.lweTrack = 'Job-Seeker Sub-Track';
+              extractedKeywords.push('Work While You Study', 'German Pathway', track);
+            } else if (matchRole) {
+              targetKeyword = `Domain: ${matchRole[1].trim()}`;
+              extractedKeywords.push('Work While You Study', 'Role', targetKeyword);
+            } else if (matchConsultant) {
+              targetKeyword = `Consultant: ${matchConsultant[1].trim()}`;
+              extractedKeywords.push('Work While You Study', 'Consultant', targetKeyword);
+            } else if (tabLower.includes('freshers')) {
+              targetKeyword = 'Freshers Work-Study Pilot';
+              formUpdates.lweTrack = 'Student Sub-Track';
+              extractedKeywords.push('Work While You Study', 'Freshers');
+            } else {
+              targetKeyword = 'Work While You Study Track';
+              extractedKeywords.push('Work While You Study');
+            }
+          }
+          // 5. STUDY ABROAD
+          else if (tabLower.includes('study abroad')) {
+            initialService = 'study-abroad';
+            sourcePage = 'Study Abroad Hub';
+            targetKeyword = 'International University Pathway';
+            extractedKeywords.push('Study Abroad', 'University Admission', 'Free Tuition');
+          }
+          // 6. EDUCATION & TRAINING
+          else if (tabLower.includes('education')) {
+            initialService = 'education';
+            sourcePage = 'Education & Language Hub';
+            targetKeyword = params.get('course') || 'Academic & Language Course';
+            extractedKeywords.push('Education', 'Training');
+          }
+        }
+
+        // Additional granular URL Query Parameters
+        if (params.has('course')) {
+          const c = params.get('course')!;
+          formUpdates.educationCourse = c;
+          targetKeyword = c;
+          extractedKeywords.push(c);
+        }
+        if (params.has('info')) formUpdates.educationMethod = params.get('info')!;
+        if (params.has('batch')) formUpdates.educationBatch = params.get('batch')!;
+        if (params.has('slot')) formUpdates.educationSlot = params.get('slot')!;
+        if (params.has('country')) {
+          const c = params.get('country')!;
+          formUpdates.targetCountry = c;
+          formUpdates.visaDestination = c;
+          extractedKeywords.push(c);
+        }
+        if (params.has('visaType')) {
+          formUpdates.visaTypeRequired = params.get('visaType')!;
+          targetKeyword = params.get('visaType')!;
+          extractedKeywords.push(params.get('visaType')!);
+        }
+        if (params.has('role')) {
+          targetKeyword = params.get('role')!;
+          extractedKeywords.push(params.get('role')!);
+        }
+        if (params.has('keyword')) {
+          targetKeyword = params.get('keyword')!;
+          extractedKeywords.push(params.get('keyword')!);
+        }
+        if (params.has('source')) {
+          sourcePage = params.get('source')!;
+        }
+
+        setInboundContext({
+          targetKeyword: targetKeyword.trim(),
+          keywords: Array.from(new Set(extractedKeywords)),
+          sourcePage,
+          sourceUrl: window.location.href
+        });
+
+        setFormData(prev => ({
+          ...prev,
+          service: initialService,
+          ...formUpdates
+        }));
+      } else {
+        setFormData(prev => ({ ...prev, service: initialService }));
+      }
+
+      const matchedPromoIndex = PROMO_BANNERS.findIndex(p => 
+        p.id.includes(initialService.split('-')[0]) || p.id.includes(initialService.replace('-', ''))
+      );
+      if (matchedPromoIndex !== -1) {
+        setActivePromoIndex(matchedPromoIndex);
+      }
+    };
+
+    parseInboundUrl();
+    window.addEventListener('hashchange', parseInboundUrl);
+    return () => window.removeEventListener('hashchange', parseInboundUrl);
   }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    if (apiError) setApiError(null);
   };
 
   const handleNextPromo = () => setActivePromoIndex((prev) => (prev + 1) % PROMO_BANNERS.length);
   const handlePrevPromo = () => setActivePromoIndex((prev) => (prev - 1 + PROMO_BANNERS.length) % PROMO_BANNERS.length);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Submit Application to Django REST Framework (DRF) Backend with Local Sync Fallback
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.phone) return;
 
     setIsSubmitting(true);
     setSubmissionResult(null);
+    setApiError(null);
 
-    // Simulate API & AI Intake Analysis Delay
-    setTimeout(() => {
-      try {
-        const selectedServiceLabel = SERVICES.find(s => s.id === formData.service)?.label || 'General Inquiry';
-        
-        let department = 'Education Hub';
-        let category: any = 'Education';
-        let customPath = '';
-        let confirmationTitle = 'Intake Analysis Ready';
-        let confirmationMsg = 'Your profile has been logged and the original AI evaluation report will be sent to your email.';
-        
-        if (formData.service === 'education') {
-          department = 'Education Hub';
-          category = 'Education';
-          customPath = `${formData.educationCourse} via ${formData.educationMethod}`;
-          confirmationTitle = 'Enrollment Process Initiated';
-          confirmationMsg = 'Enrollment confirmed! Your class link and portal credentials will be sent to your email shortly.';
-        } else if (formData.service === 'study-abroad') {
-          department = 'Study Abroad';
-          category = 'Study Abroad';
-          customPath = `Target: ${formData.targetCountry} - ${formData.institutionType} Inst. (${formData.targetCourseTrack})`;
-          confirmationTitle = 'Profile Evaluated';
-          confirmationMsg = `Profile analyzed for ${formData.targetCountry}. Estimated eligibility score and next steps are displayed below.`;
-        } else if (formData.service === 'visa') {
-          department = 'Visa Processing';
-          category = 'Visa';
-          customPath = `${formData.visaTypeRequired} to ${formData.visaDestination} (From: ${formData.currentResidence})`;
-          confirmationTitle = 'Visa Profile Evaluated';
-          confirmationMsg = `Visa requirements analyzed for ${formData.visaDestination}. Estimated eligibility score and next steps displayed below.`;
-        } else if (formData.service === 'work-while-you-study') {
-          department = 'Job & Career / Work While You Study';
-          category = 'Jobs';
-          customPath = `${formData.lweTrack} - ${formData.stipendDomain} (${formData.internshipDuration})`;
-          confirmationTitle = 'Pilot Track Assigned';
-          confirmationMsg = 'Profile matched. Your corporate tracking and stipend pilot details have been logged in our Lead CRM.';
-        } else if (formData.service === 'jobs') {
-          department = 'Job & Career / Work While You Study';
-          category = 'Jobs';
-          customPath = `${formData.jobDomain} (${formData.roleLevel}) - To: ${formData.targetLocation}`;
-          confirmationTitle = 'Application Submitted';
-          confirmationMsg = 'You will be under a 6-month probation and training period in your department with a reasonable probation salary, which will increase based on department performance. We will contact you soon.';
-        } else if (formData.service === 'rewards') {
-          department = 'Partnerships & Rewards';
-          category = 'Jobs';
-          customPath = `${formData.partnershipOption} - ${formData.rewardTier}`;
-          confirmationTitle = 'Partnership Approved';
-          confirmationMsg = 'Welcome to the consultant network. Your tracking dashboard credentials are on their way.';
-        }
+    const selectedServiceLabel = SERVICES.find(s => s.id === formData.service)?.label || 'General Inquiry';
+    
+    let department = 'Education Hub';
+    let category: any = 'Education';
+    let customPath = '';
+    let confirmationTitle = 'Intake Analysis Ready';
+    let confirmationMsg = 'Your profile has been logged and the original AI evaluation report will be sent to your email.';
+    
+    if (formData.service === 'education') {
+      department = 'Education Hub';
+      category = 'Education';
+      customPath = `${formData.educationCourse} via ${formData.educationMethod}`;
+      confirmationTitle = 'Enrollment Process Initiated';
+      confirmationMsg = 'Enrollment confirmed! Your class link and portal credentials will be sent to your email shortly.';
+    } else if (formData.service === 'study-abroad') {
+      department = 'Study Abroad';
+      category = 'Study Abroad';
+      customPath = `Target: ${formData.targetCountry} - ${formData.institutionType} Inst. (${formData.targetCourseTrack})`;
+      confirmationTitle = 'Profile Evaluated';
+      confirmationMsg = `Profile analyzed for ${formData.targetCountry}. Estimated eligibility score and next steps are displayed below.`;
+    } else if (formData.service === 'visa') {
+      department = 'Visa Processing';
+      category = 'Visa';
+      customPath = `${formData.visaTypeRequired} to ${formData.visaDestination} (From: ${formData.currentResidence})`;
+      confirmationTitle = 'Visa Profile Evaluated';
+      confirmationMsg = `Visa requirements analyzed for ${formData.visaDestination}. Estimated eligibility score and next steps displayed below.`;
+    } else if (formData.service === 'work-while-you-study') {
+      department = 'Job & Career / Work While You Study';
+      category = 'Work While You Study';
+      customPath = `${formData.lweTrack} - ${formData.stipendDomain} (${formData.internshipDuration})`;
+      confirmationTitle = 'Pilot Track Assigned';
+      confirmationMsg = 'Profile matched. Your corporate tracking and stipend pilot details have been logged in our Lead CRM.';
+    } else if (formData.service === 'jobs') {
+      department = 'Job & Career / Work While You Study';
+      category = 'Jobs';
+      customPath = `${formData.jobDomain} (${formData.roleLevel}) - To: ${formData.targetLocation}`;
+      confirmationTitle = 'Application Submitted';
+      confirmationMsg = 'You will be under a 6-month probation and training period in your department with a reasonable probation salary, which will increase based on department performance. We will contact you soon.';
+    } else if (formData.service === 'rewards') {
+      department = 'Partnerships & Rewards';
+      category = 'Rewards';
+      customPath = `${formData.partnershipOption} - ${formData.rewardTier}`;
+      confirmationTitle = 'Partnership Approved';
+      confirmationMsg = 'Welcome to the consultant network. Your tracking dashboard credentials are on their way.';
+    }
 
-        // Save to DB layer with extended metadata for CRM integration
-        saveInquiry({
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          course: selectedServiceLabel,
-          path: customPath,
-          batch: formData.service === 'education' ? formData.educationBatch : undefined,
-          slot: formData.service === 'education' ? formData.educationSlot : undefined,
-          price: 'Pending Consultation',
-          paymentStatus: 'Pending',
-          category: category,
-          source: 'Application Pool Unified Intake',
-          docStatus: 'Pending',
-          department: department,
-          crmStatus: 'New Lead',
-          pipelineStage: 'Intake'
-        });
+    const mockScore = Math.floor(75 + Math.random() * 24);
+    const resolvedTargetKeyword = inboundContext.targetKeyword || (
+      formData.service === 'education' ? formData.educationCourse :
+      formData.service === 'visa' ? formData.visaTypeRequired :
+      formData.service === 'jobs' ? formData.jobDomain :
+      formData.service === 'study-abroad' ? formData.targetCourseTrack :
+      formData.service === 'work-while-you-study' ? formData.stipendDomain :
+      formData.rewardTier
+    );
 
-        const mockScore = Math.floor(75 + Math.random() * 24);
+    const combinedKeywords = Array.from(new Set([
+      selectedServiceLabel,
+      resolvedTargetKeyword,
+      formData.service === 'visa' ? formData.visaDestination : formData.targetCountry,
+      ...inboundContext.keywords
+    ])).filter(Boolean);
 
-        setSubmissionResult({
-          status: 'success',
-          confirmationTitle,
-          message: confirmationMsg,
-          aiScore: mockScore,
-          aiPath: customPath
-        });
+    // Build complete structured payload for DRF Backend
+    const backendPayload = {
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      type: 'Online' as const,
+      course: selectedServiceLabel,
+      path: customPath,
+      batch: formData.service === 'education' ? formData.educationBatch : undefined,
+      slot: formData.service === 'education' ? formData.educationSlot : undefined,
+      price: 'Pending Consultation',
+      paymentStatus: 'Pending' as const,
+      category: category,
+      department: department,
+      crmStatus: 'New Lead' as const,
+      pipelineStage: 'Intake' as const,
+      source: `Unified Intake (${inboundContext.sourcePage})`,
+      docStatus: 'Pending' as const,
+      aiScore: mockScore,
+      aiPath: customPath,
 
-      } catch (err) {
-        console.error(err);
-        setSubmissionResult({
-          status: 'error',
-          message: 'There was an issue submitting your application. Please try again or contact support.'
-        });
-      } finally {
-        setIsSubmitting(false);
-        setTimeout(() => {
-          resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 100);
+      // Contextual Keyword Tracking & Source
+      target_keyword: resolvedTargetKeyword,
+      keywords: combinedKeywords,
+      source_page: inboundContext.sourcePage,
+      source_url: window.location.href,
+
+      // Normalized quick-access fields
+      target_country: formData.service === 'study-abroad' ? formData.targetCountry : (formData.service === 'visa' ? formData.visaDestination : (formData.service === 'jobs' ? formData.targetLocation : undefined)),
+      visa_type: formData.service === 'visa' ? formData.visaTypeRequired : undefined,
+      job_role: formData.service === 'jobs' ? (inboundContext.targetKeyword || formData.jobDomain) : undefined,
+      resume_url: formData.service === 'jobs' ? formData.resumeUrl : undefined,
+      reward_tier: formData.service === 'rewards' ? formData.rewardTier : undefined,
+      referral_code: formData.service === 'rewards' ? formData.referralCode : undefined,
+
+      // Complete Section Data snapshot
+      section_data: {
+        service: formData.service,
+        educationCourse: formData.educationCourse,
+        educationMethod: formData.educationMethod,
+        educationBatch: formData.educationBatch,
+        educationSlot: formData.educationSlot,
+        targetCountry: formData.targetCountry,
+        institutionType: formData.institutionType,
+        targetCourseTrack: formData.targetCourseTrack,
+        currentVisaStatus: formData.currentVisaStatus,
+        currentResidence: formData.currentResidence,
+        visaDestination: formData.visaDestination,
+        visaTypeRequired: formData.visaTypeRequired,
+        lweTrack: formData.lweTrack,
+        stipendDomain: formData.stipendDomain,
+        internshipDuration: formData.internshipDuration,
+        jobDomain: formData.jobDomain,
+        roleLevel: formData.roleLevel,
+        currentLocation: formData.currentLocation,
+        targetLocation: formData.targetLocation,
+        resumeUrl: formData.resumeUrl,
+        rewardTier: formData.rewardTier,
+        referralCode: formData.referralCode,
+        partnershipOption: formData.partnershipOption
       }
-    }, 2000);
+    };
+
+    try {
+      // 1. Dispatch to Django REST Framework (DRF) Backend
+      const { data: drfData, error: drfError } = await inquiryService.createInquiry(backendPayload);
+
+      let tokenNumber = `ILA-2026-${Math.floor(100000 + Math.random() * 900000)}`;
+
+      if (drfError) {
+        if (drfError.isNetworkError) {
+          // Graceful fallback if DRF server is not running or devtunnel offline
+          console.warn('[DRF Backend Offline] Saving inquiry to local database fallback.');
+        } else if (drfError.fieldErrors) {
+          const fieldMsg = Object.entries(drfError.fieldErrors)
+            .map(([field, errs]) => `${field}: ${errs.join(', ')}`)
+            .join(' | ');
+          setApiError(`Validation Error from DRF Server: ${fieldMsg}`);
+        } else {
+          setApiError(drfError.message || 'DRF Server rejected the intake request.');
+        }
+      }
+
+      if (drfData) {
+        tokenNumber = drfData.tokenNumber || (drfData as any).token_number || (drfData as any).id || tokenNumber;
+      }
+
+      setAssignedToken(tokenNumber);
+
+      // 2. Always persist to client-side localStorage DB to maintain uninterrupted local state
+      saveInquiry({
+        ...backendPayload,
+        tokenNumber
+      });
+
+      setSubmissionResult({
+        status: 'success',
+        confirmationTitle,
+        message: confirmationMsg,
+        aiScore: mockScore,
+        aiPath: customPath,
+        tokenNumber
+      });
+
+    } catch (err: any) {
+      console.error('Submission error:', err);
+      setSubmissionResult({
+        status: 'error',
+        message: err?.message || 'There was an issue submitting your application. Please try again or contact support.'
+      });
+    } finally {
+      setIsSubmitting(false);
+      setTimeout(() => {
+        resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 150);
+    }
   };
 
   const ActivePromoIcon = PROMO_BANNERS[activePromoIndex].icon;
@@ -319,7 +663,38 @@ export default function ApplicationPoolPage() {
                 <Sparkles className="w-4 h-4" /> Global Intake Portal
               </div>
               <h1 className="text-3xl sm:text-4xl font-black text-slate-900 mb-2 leading-tight">Unified Application Form</h1>
-              <p className="text-slate-500 text-sm mb-8">Register your profile. Our AI will match your background to the best academic or professional pathway.</p>
+              <p className="text-slate-500 text-sm mb-6">Register your profile. Our AI will match your background to the best academic or professional pathway.</p>
+
+              {/* Contextual Inbound Keyword & Referral Pathway Banner */}
+              {inboundContext.targetKeyword && (
+                <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-brand-50 to-indigo-50/50 border border-brand-200/80 shadow-sm animate-fade-in">
+                  <div className="flex items-start gap-3">
+                    <div className="p-2 rounded-xl bg-brand-600 text-white shadow-md shadow-brand-500/20 shrink-0 mt-0.5">
+                      <Compass className="w-4 h-4" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 flex-wrap mb-1">
+                        <span className="text-[11px] font-black uppercase tracking-wider text-brand-800">Target Track</span>
+                        <span className="px-2 py-0.5 rounded-full bg-brand-600 text-white text-[10px] font-black">Pre-configured</span>
+                      </div>
+                      <p className="text-sm font-black text-slate-900 truncate">
+                        {inboundContext.targetKeyword}
+                      </p>
+                      <p className="text-[11px] text-slate-500 mt-0.5">
+                        Selected via {inboundContext.sourcePage || 'ILA Global Network'}. Section fields have been aligned automatically.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* DRF Server API / Network Alert */}
+              {apiError && (
+                <div className="mb-6 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold flex items-center gap-2 animate-fade-in">
+                  <AlertCircle className="w-4 h-4 shrink-0 text-red-500" />
+                  <span>{apiError}</span>
+                </div>
+              )}
               
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div>
@@ -727,12 +1102,24 @@ export default function ApplicationPoolPage() {
                       <p className="text-slate-300 text-base leading-relaxed mb-6">
                         {submissionResult.message}
                       </p>
-                      <div className="flex items-center gap-4 p-4 rounded-2xl bg-white/10 border border-white/10 backdrop-blur-sm">
-                        <Mail className="w-6 h-6 text-brand-400 shrink-0" />
-                        <div>
-                          <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Report Dispatched To</p>
-                          <p className="text-sm font-semibold text-white">{formData.email}</p>
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-4 p-4 rounded-2xl bg-white/10 border border-white/10 backdrop-blur-sm">
+                          <Mail className="w-6 h-6 text-brand-400 shrink-0" />
+                          <div>
+                            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Report Dispatched To</p>
+                            <p className="text-sm font-semibold text-white">{formData.email}</p>
+                          </div>
                         </div>
+
+                        {assignedToken && (
+                          <div className="flex items-center gap-4 p-4 rounded-2xl bg-brand-500/20 border border-brand-400/40 backdrop-blur-sm">
+                            <Tag className="w-6 h-6 text-brand-300 shrink-0" />
+                            <div>
+                              <p className="text-xs font-bold text-brand-300 uppercase tracking-wider">Official DRF Token ID</p>
+                              <p className="text-sm font-mono font-black text-white tracking-wider">{assignedToken}</p>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
 

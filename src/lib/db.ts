@@ -47,6 +47,17 @@ export interface Inquiry {
   followUpStatus?: 'Due Today' | 'Overdue' | 'Scheduled' | 'Completed' | 'Pending';
   followUpHistory?: FollowUpRecord[];
   visaProcessingStage?: 'Not Applicable' | 'Profile Assessment' | 'APS Certificate' | 'Blocked Account' | 'Embassy Appointment' | 'Visa Approved' | 'Visa Rejected';
+  target_keyword?: string;
+  keywords?: string[];
+  source_page?: string;
+  source_url?: string;
+  section_data?: Record<string, any>;
+  target_country?: string;
+  visa_type?: string;
+  job_role?: string;
+  resume_url?: string;
+  reward_tier?: string;
+  referral_code?: string;
 }
 
 export interface VisitorLog {
