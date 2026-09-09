@@ -24,6 +24,7 @@ import StudyAbroadPage from './pages/StudyAbroadPage'
 import EducationPage from './pages/EducationPage'
 import ApplicationPoolPage from './pages/ApplicationPoolPage'
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
+import TutorPathPage from './pages/TutorPathPage'
 import CookieBanner from './components/common/CookieBanner'
 
 function App() {
@@ -112,6 +113,9 @@ function App() {
       } else if (hash === '#study-abroad' || hash.startsWith('#study-abroad#')) {
         setCurrentPage('study-abroad')
         if (hash === '#study-abroad') window.scrollTo(0, 0)
+      } else if (hash === '#tutor-path' || hash.startsWith('#tutor-path')) {
+        setCurrentPage('tutor-path')
+        window.scrollTo(0, 0)
       } else if (hash === '#education' || hash.startsWith('#education#')) {
         setCurrentPage('education')
         if (hash === '#education') window.scrollTo(0, 0)
@@ -157,6 +161,8 @@ function App() {
           <IlasWithYouPage />
         ) : currentPage === 'study-abroad' ? (
           <StudyAbroadPage />
+        ) : currentPage === 'tutor-path' ? (
+          <TutorPathPage />
         ) : currentPage === 'education' ? (
           <EducationPage />
         ) : currentPage === 'applications' ? (

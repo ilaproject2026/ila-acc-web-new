@@ -158,6 +158,16 @@ export default function EducationPage() {
             </button>
           ))}
 
+          {/* Tutor Path Key */}
+          <a
+            href="#tutor-path"
+            className="text-xs md:text-sm font-black pb-1.5 transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 text-amber-700 hover:text-amber-800 bg-amber-50 hover:bg-amber-100 px-3 py-1 rounded-full border border-amber-300 shadow-xs"
+            title="Tutor Path: Intelli-Coach AI & Course Page Instructions"
+          >
+            <BrainCircuit className="w-3.5 h-3.5 text-amber-600 animate-pulse" />
+            <span>Tutor Path (Intelli-Coach)</span>
+          </a>
+
           <button
             onClick={() => scrollTo('catalog-blocks')}
             className={`text-xs md:text-sm font-bold pb-1.5 transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
