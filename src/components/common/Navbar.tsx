@@ -134,19 +134,56 @@ export default function Navbar() {
   }) => {
     if (!item) return false
     const currentHash = activeHash || '#home'
+    const cleanCurrent = currentHash.split('?')[0]
 
-    if (item.href && currentHash.startsWith(item.href)) {
+    // 1. Direct match with item.href
+    if (item.href) {
+      const cleanItemHref = item.href.split('?')[0]
+      if (
+        cleanCurrent === cleanItemHref ||
+        cleanCurrent.startsWith(cleanItemHref + '#') ||
+        cleanCurrent.startsWith(cleanItemHref + '/')
+      ) {
+        return true
+      }
+    }
+
+    // Special routes:
+    // Course pages and Tutor Path should highlight "All Courses"
+    if (item.href === '#education') {
+      if (
+        cleanCurrent.startsWith('#course-') ||
+        cleanCurrent.startsWith('#tutor-path')
+      ) {
+        return true
+      }
+    }
+
+    // Jobs alternate route
+    if (
+      item.href === '#jobs-page' && 
+      (cleanCurrent === '#jobs' || cleanCurrent.startsWith('#jobs#'))
+    ) {
       return true
     }
 
+    // Rewards alternate route
+    if (
+      item.href === '#rewards' && 
+      (cleanCurrent === '#rewards-page' || cleanCurrent.startsWith('#rewards-page#'))
+    ) {
+      return true
+    }
+
+    // 2. Exact match on any child route
     if (item.children && Array.isArray(item.children)) {
       return item.children.some((child) => {
         if (!child || !child.href) return false
-        const hashPart = child.href.includes('#')
-          ? child.href.substring(child.href.lastIndexOf('#'))
-          : child.href
-
-        return !!(hashPart && currentHash.startsWith(hashPart))
+        const cleanChild = child.href.split('?')[0]
+        return (
+          cleanCurrent === cleanChild ||
+          cleanCurrent.startsWith(cleanChild + '#')
+        )
       })
     }
 
@@ -156,11 +193,13 @@ export default function Navbar() {
   const isChildActive = (child: NavChildItem) => {
     if (!child || !child.href) return false
     const currentHash = activeHash || '#home'
-    const hashPart = child.href.includes('#')
-      ? child.href.substring(child.href.lastIndexOf('#'))
-      : child.href
+    const cleanCurrent = currentHash.split('?')[0]
+    const cleanChild = child.href.split('?')[0]
 
-    return !!(hashPart && currentHash.startsWith(hashPart))
+    return (
+      cleanCurrent === cleanChild ||
+      cleanCurrent.startsWith(cleanChild + '#')
+    )
   }
 
   return (
