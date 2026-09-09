@@ -10,6 +10,7 @@ import {
   getGlobalCourses, getGlobalPaths, getGlobalCategories,
   GlobalCourse, GlobalPath, GlobalCategory 
 } from '../lib/db';
+import EducationTourGuide from '../components/common/EducationTourGuide';
 
 const benefitItems = [
   { icon: Briefcase, title: "Work While You Study", highlight: "Junior Consultant", desc: "with verified monthly stipend.", link: "#learn-while-earn" },
@@ -136,7 +137,7 @@ export default function EducationPage() {
       </section>
 
       {/* 2. DYNAMIC STICKY SUB-NAVIGATION BAR */}
-      <div className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200 py-3 mb-10 transition-all duration-300 shadow-2xs">
+      <div id="edu-tour-nav" className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200 py-3 mb-10 transition-all duration-300 shadow-2xs">
         <div className="container-max mx-auto px-6 flex items-center justify-start md:justify-center gap-3 md:gap-6 overflow-x-auto hide-scrollbar">
           {mainViewCourses.map((course, idx) => (
             <button
@@ -148,9 +149,9 @@ export default function EducationPage() {
                   : 'text-slate-600 hover:text-slate-900 border-b-2 border-transparent'
               }`}
             >
-              <span className="w-5 h-5 rounded-full bg-brand-50 text-brand-700 text-[10px] flex items-center justify-center font-black">
+              {/* <span className="w-5 h-5 rounded-full bg-brand-50 text-brand-700 text-[10px] flex items-center justify-center font-black">
                 {idx + 1}
-              </span>
+              </span> */}
               <span>{course.name}</span>
             </button>
           ))}
@@ -208,7 +209,7 @@ export default function EducationPage() {
               <div className="grid lg:grid-cols-12 gap-8 items-start mb-8">
                 
                 {/* Dynamically Fetched Paths Column */}
-                <div className="lg:col-span-6 flex flex-col gap-2.5">
+                <div id={index === 0 ? "edu-tour-paths" : undefined} className="lg:col-span-6 flex flex-col gap-2.5">
                   <div className="flex items-center justify-between px-1">
                     <span className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
                       <Layers className="w-3.5 h-3.5 text-brand-600" />
@@ -273,7 +274,7 @@ export default function EducationPage() {
                 </div>
 
                 {/* Guaranteed Benefits Card */}
-                <div className="lg:col-span-6 bg-slate-900 p-7 sm:p-8 rounded-3xl text-white shadow-xl">
+                <div id={index === 0 ? "edu-tour-benefits" : undefined} className="lg:col-span-6 bg-slate-900 p-7 sm:p-8 rounded-3xl text-white shadow-xl">
                   <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-5">
                     <h3 className="text-xl font-black text-white">Guaranteed Career Benefits</h3>
                     <span className="text-[10px] font-black uppercase tracking-wider text-amber-400 bg-amber-400/10 px-2.5 py-1 rounded-full border border-amber-400/20">
@@ -321,7 +322,8 @@ export default function EducationPage() {
               )}
 
               {/* Clickable Detailed Course Breakdown Specifications */}
-              <div id={`specs-${course.id}`} className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm mb-6">
+              <div id={index === 0 ? "edu-tour-specs" : undefined}>
+                <div id={`specs-${course.id}`} className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm mb-6">
                 <div className="flex items-center justify-between mb-4">
                   <h4 className="text-sm font-black uppercase tracking-wider text-brand-700 flex items-center gap-2">
                     <BookOpen className="w-4 h-4 text-brand-600" /> Course Specifications &amp; Overview
@@ -360,9 +362,10 @@ export default function EducationPage() {
                   </div>
                 </div>
               </div>
+              </div>
 
               {/* ILA Companion Promotion Footer */}
-              <div className="bg-slate-950 p-7 sm:p-9 rounded-3xl text-white border-2 border-amber-500/40 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
+              <div id={index === 0 ? "edu-tour-companion" : undefined} className="bg-slate-950 p-7 sm:p-9 rounded-3xl text-white border-2 border-amber-500/40 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
                 <div>
                   <div className="text-amber-400 font-black uppercase text-xs mb-1.5 flex items-center gap-1.5">
                     <Crown className="w-4 h-4 text-amber-400" /> Royal Lifetime Mentorship
@@ -409,7 +412,7 @@ export default function EducationPage() {
           </div>
 
           {/* DYNAMIC FILTER & CONTROLS TOOLBAR */}
-          <div className="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-sm mb-10 space-y-4">
+          <div id="edu-tour-catalog" className="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-sm mb-10 space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               
               {/* Primary Category Filter Dropdown */}
@@ -666,6 +669,9 @@ export default function EducationPage() {
         </section>
 
       </div>
+
+      {/* Interactive Feature Guide & Onboarding Tour */}
+      <EducationTourGuide />
     </div>
   );
 }

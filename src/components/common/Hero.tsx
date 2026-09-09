@@ -87,7 +87,7 @@ export default function Hero() {
       ctaText: "Enroll in Education",
       ctaLink: "#applications?tab=Education",
       icon: <GraduationCap className="w-16 h-16 text-accent-400" />,
-      bgImage: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80",
+      bgImage: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&q=80",
       overlayColor: "from-brand-900/95 via-brand-900/80 to-transparent",
       accentColor: "border-accent-400"
     },
@@ -105,7 +105,7 @@ export default function Hero() {
       ctaText: "Apply for Work While You Study",
       ctaLink: "#applications?tab=Work While You Study",
       icon: <Briefcase className="w-16 h-16 text-emerald-400" />,
-      bgImage: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80",
+      bgImage: "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&q=80",
       overlayColor: "from-emerald-950/95 via-emerald-900/80 to-transparent",
       accentColor: "border-emerald-400",
       badgeText: "STUDENT TRACK"

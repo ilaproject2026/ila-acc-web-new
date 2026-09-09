@@ -22,7 +22,7 @@ const PROMO_BANNERS = [
     title: 'World-Class Education',
     subtitle: 'AI-Powered Language & Tech Mastery',
     desc: 'Master German, IELTS, or Software Engineering with our 24/7 Intelli-Coach AI system.',
-    bgImage: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80',
+    bgImage: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&q=80',
     icon: GraduationCap,
     color: 'from-brand-900/95 via-brand-900/80',
     features: [

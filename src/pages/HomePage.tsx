@@ -25,15 +25,32 @@ const ServiceSection = ({
       <div className="container-max px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           
-          <div className="order-2 lg:order-1 space-y-8">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white shadow-sm border border-slate-100 mb-2">
-              <Icon className={`w-4 h-4 ${color}`} />
-              <span className={`text-[10px] font-black uppercase tracking-widest ${color}`}>{title}</span>
+          <div className="order-1 lg:order-1 space-y-7">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white shadow-sm border border-slate-100 mb-3">
+                <Icon className={`w-4 h-4 ${color}`} />
+                <span className={`text-[10px] font-black uppercase tracking-widest ${color}`}>{title}</span>
+              </div>
+              
+              <h2 className="text-3xl md:text-5xl font-black text-slate-900 leading-tight mb-5">
+                {subtitle}
+              </h2>
+
+              {/* PRIMARY HIGH-VISIBILITY CTA ROW - Instantly visible without scrolling */}
+              <div className="flex flex-wrap items-center gap-3 pt-1">
+                <button 
+                  onClick={openEligibility}
+                  className="inline-flex items-center justify-center gap-2.5 px-8 py-4 bg-slate-950 hover:bg-brand-600 text-white font-black rounded-2xl shadow-xl hover:shadow-brand-500/25 transition-all duration-300 active:scale-95 text-sm cursor-pointer group"
+                >
+                  <span>{ctaText}</span>
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </button>
+                <div className="inline-flex items-center gap-1.5 px-4 py-3 rounded-2xl bg-white/90 border border-slate-200 text-xs font-bold text-slate-600 shadow-xs">
+                  <Sparkles className={`w-3.5 h-3.5 ${color}`} />
+                  <span>Direct Gateway • 24/7 Guidance</span>
+                </div>
+              </div>
             </div>
-            
-            <h2 className="text-3xl md:text-5xl font-black text-slate-900 leading-tight">
-              {subtitle}
-            </h2>
             
             {/* Features Grid - Icon focused */}
             <div className="grid sm:grid-cols-2 gap-4">
@@ -51,7 +68,7 @@ const ServiceSection = ({
             </div>
 
             {/* Consistent Branding integrations */}
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+            <div className="flex flex-col sm:flex-row gap-4 pt-1">
               {/* ILA With You Integration */}
               <div className="flex-1 bg-gradient-to-br from-brand-900 to-brand-800 p-5 rounded-2xl relative overflow-hidden group cursor-pointer" onClick={() => window.location.hash = '#ilas-with-you'}>
                 <div className="absolute -right-4 -top-4 w-24 h-24 bg-white/10 rounded-full blur-xl group-hover:bg-white/20 transition-all" />
@@ -76,32 +93,31 @@ const ServiceSection = ({
                 </p>
               </div>
             </div>
-
-            <button 
-              onClick={openEligibility}
-              className={`inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-slate-900 text-white font-black rounded-xl hover:bg-slate-800 transition-all active:scale-95 text-sm shadow-xl w-full sm:w-auto`}
-            >
-              {ctaText}
-              <ArrowRight className="w-4 h-4" />
-            </button>
           </div>
 
-          <div className="order-1 lg:order-2 relative">
+          <div className="order-2 lg:order-2 relative">
             <div className="aspect-[4/5] rounded-[2.5rem] overflow-hidden shadow-2xl relative transform lg:rotate-2 hover:rotate-0 transition-all duration-500">
               <img src={imageSrc} alt={title} className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent" />
               
-              {/* App-like Floating Widget */}
-              <div className="absolute bottom-6 left-6 right-6 bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-2xl text-white">
-                <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-full bg-white/20`}>
-                    <ShieldCheck className="w-5 h-5 text-white" />
+              {/* Interactive App-like Floating Widget with Direct Action Button */}
+              <div className="absolute bottom-6 left-6 right-6 bg-slate-950/85 backdrop-blur-xl border border-white/20 p-4 rounded-2xl text-white flex items-center justify-between gap-3 shadow-2xl">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="p-2.5 rounded-xl bg-white/10 text-white shrink-0">
+                    <ShieldCheck className="w-5 h-5 text-emerald-400" />
                   </div>
-                  <div>
-                    <div className="text-xs font-bold opacity-80">Verified & Certified</div>
-                    <div className="text-sm font-black">Global Standard</div>
+                  <div className="min-w-0">
+                    <div className="text-[10px] font-bold text-slate-300 uppercase tracking-wider">Verified Track</div>
+                    <div className="text-sm font-black text-white truncate">{title}</div>
                   </div>
                 </div>
+                <button
+                  onClick={openEligibility}
+                  className="px-4 py-2.5 rounded-xl bg-white hover:bg-brand-50 text-slate-900 hover:text-brand-700 text-xs font-black transition-all shadow-md shrink-0 cursor-pointer flex items-center gap-1 group"
+                >
+                  <span>{ctaText}</span>
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                </button>
               </div>
             </div>
           </div>
@@ -133,9 +149,9 @@ export default function HomePage() {
         icon={GraduationCap}
         color="text-accent-600"
         bgColor="bg-white"
-        imageSrc="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80"
+        imageSrc="https://unsplash.com/photos/person-holding-light-bulb-education-concept-mpAwtcVBx-w"
         ctaText="Explore Courses"
-        ctaLink="#applications?tab=Education"
+        ctaLink="#education"
         features={[
           { icon: <Globe className="w-5 h-5 text-accent-600"/>, title: "Global Certifications", desc: "Recognized worldwide" },
           { icon: <Sparkles className="w-5 h-5 text-accent-600"/>, title: "AI Tutoring", desc: "24/7 intelligent assistance" },
@@ -154,7 +170,7 @@ export default function HomePage() {
         bgColor="bg-slate-50"
         imageSrc="https://images.unsplash.com/photo-1436491865332-7a61a109c0f3?auto=format&fit=crop&q=80"
         ctaText="Check Visa Services"
-        ctaLink="#applications?tab=Visa"
+        ctaLink="#visa-page"
         features={[
           { icon: <ShieldCheck className="w-5 h-5 text-blue-600"/>, title: "High Success Rate", desc: "Precision analytics & checking" },
           { icon: <Globe className="w-5 h-5 text-blue-600"/>, title: "On-Ground Support", desc: "Assistance upon arrival" },
@@ -173,7 +189,7 @@ export default function HomePage() {
         bgColor="bg-white"
         imageSrc="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80"
         ctaText="Find Global Jobs"
-        ctaLink="#applications?tab=Jobs"
+        ctaLink="#jobs-page"
         features={[
           { icon: <Sparkles className="w-5 h-5 text-emerald-600"/>, title: "AI Matching", desc: "Find the perfect designation" },
           { icon: <TrendingUp className="w-5 h-5 text-emerald-600"/>, title: "Profit Sharing", desc: "Syndicate management programs" },
@@ -192,7 +208,7 @@ export default function HomePage() {
         bgColor="bg-slate-50"
         imageSrc="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80"
         ctaText="Apply for Work & Study"
-        ctaLink="#applications?tab=Work While You Study"
+        ctaLink="#work-while-you-study-page"
         features={[
           { icon: <Star className="w-5 h-5 text-amber-600"/>, title: "Monthly Stipend", desc: "Financial independence" },
           { icon: <TrendingUp className="w-5 h-5 text-amber-600"/>, title: "Career Growth", desc: "Practical experience" },
@@ -211,7 +227,7 @@ export default function HomePage() {
         bgColor="bg-white"
         imageSrc="https://images.unsplash.com/photo-1529400971008-f566de0e6dfc?auto=format&fit=crop&q=80"
         ctaText="Start Your Journey"
-        ctaLink="#applications?tab=Study Abroad"
+        ctaLink="#study-abroad"
         features={[
           { icon: <GraduationCap className="w-5 h-5 text-brand-600"/>, title: "Top Universities", desc: "Partnerships worldwide" },
           { icon: <Briefcase className="w-5 h-5 text-brand-600"/>, title: "Profile Building", desc: "Resume & SOP support" },
