@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Bot, 
   Sparkles, 
@@ -127,8 +128,19 @@ export default function IlasWithYouPage() {
     }
   ]);
 
+  const navigate = useNavigate();
   const navigateTo = (url: string) => {
-    window.location.hash = url;
+    if (url.startsWith('#applications') || url.startsWith('#apply')) {
+      const q = url.includes('?') ? url.substring(url.indexOf('?')) : '';
+      navigate(`/applications${q}`);
+    } else if (url === '#learn-while-earn') {
+      navigate('/work-while-you-study');
+    } else if (url.startsWith('#')) {
+      const clean = url.replace('#', '');
+      navigate(`/${clean}`);
+    } else {
+      navigate(url);
+    }
   };
 
   const handleAsk = (promptText: string) => {

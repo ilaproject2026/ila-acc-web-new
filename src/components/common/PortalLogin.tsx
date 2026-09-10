@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { X, LogIn, Shield, GraduationCap, User, Users, Building2, UserPlus, Gift, Sparkles } from 'lucide-react'
 import { portalRoles, type PortalRole } from '../../data/navigation'
 import { authService } from '../../services/api'
@@ -21,6 +22,7 @@ export interface StaffUser {
 }
 
 export default function PortalLogin() {
+  const navigate = useNavigate()
   const [open, setOpen] = useState(false)
   const [activeTab, setActiveTab] = useState<'signin' | 'register' | 'forgot'>('signin')
   const [email, setEmail] = useState('')
@@ -96,7 +98,7 @@ export default function PortalLogin() {
 
       setSuccess(`Authenticated as ${teamDept}! Routing to Dashboard...`)
       setTimeout(() => {
-        window.location.hash = '#admin-dashboard'
+        navigate('/admin')
         setOpen(false)
       }, 500)
     } else {
@@ -107,9 +109,9 @@ export default function PortalLogin() {
       setSuccess(`Authenticated as ${roleType}! Redirecting...`)
       setTimeout(() => {
         if (roleType === 'student') {
-          window.location.hash = '#student-dashboard'
+          navigate('/student-dashboard')
         } else {
-          window.location.hash = '#applications'
+          navigate('/applications')
         }
         setOpen(false)
       }, 500)
@@ -147,7 +149,7 @@ export default function PortalLogin() {
 
         setSuccess(`Welcome back! Routing directly to ${assignedRole} Dashboard...`)
         setTimeout(() => {
-          window.location.hash = '#admin-dashboard'
+          navigate('/admin')
           setOpen(false)
         }, 600)
       } else {
@@ -158,9 +160,9 @@ export default function PortalLogin() {
         setSuccess(`Welcome back! Redirecting to ${selectedRole} portal...`)
         setTimeout(() => {
           if (selectedRole === 'student') {
-            window.location.hash = '#student-dashboard'
+            navigate('/student-dashboard')
           } else {
-            window.location.hash = '#applications'
+            navigate('/applications')
           }
           setOpen(false)
         }, 600)
@@ -286,9 +288,9 @@ export default function PortalLogin() {
       window.dispatchEvent(new CustomEvent('ilas-auth-state-changed'))
       
       if (selectedRole === 'student') {
-        window.location.hash = '#student-dashboard'
+        navigate('/student-dashboard')
       } else {
-        window.location.hash = '#applications'
+        navigate('/applications')
       }
       setOpen(false)
     }, 1200)

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useSearchParams, useLocation } from 'react-router-dom';
 import { 
   ChevronRight, ChevronLeft, GraduationCap, Globe, Briefcase, Plane, 
   MessageCircle, Sparkles, CheckCircle2, ArrowRight, ShieldCheck, Mail, Star,
@@ -104,6 +105,9 @@ const PROMO_BANNERS = [
 ];
 
 export default function ApplicationPoolPage() {
+  const [searchParams] = useSearchParams();
+  const location = useLocation();
+
   // Form State
   const [formData, setFormData] = useState({
     name: '',
@@ -183,19 +187,24 @@ export default function ApplicationPoolPage() {
     return () => clearInterval(timer);
   }, []);
 
-  // Robust URL Hash & Contextual Keyword Extraction
+  // Robust URL Search Params & Contextual Keyword Extraction
   useEffect(() => {
     const parseInboundUrl = () => {
-      const hash = window.location.hash;
       let initialService = 'education';
       let targetKeyword = '';
       const extractedKeywords: string[] = [];
       let sourcePage = 'Website Portal';
       const formUpdates: Partial<typeof formData> = {};
 
-      if (hash.includes('?')) {
+      const hash = window.location.hash || location.hash || '';
+      let params = searchParams;
+      const hasStandardParams = Array.from(searchParams.keys()).length > 0;
+      if (!hasStandardParams && hash.includes('?')) {
         const queryString = hash.substring(hash.indexOf('?') + 1);
-        const params = new URLSearchParams(queryString);
+        params = new URLSearchParams(queryString);
+      }
+
+      if (hasStandardParams || hash.includes('?')) {
         const tabParam = params.get('tab') ? decodeURIComponent(params.get('tab')!) : '';
 
         // Check explicit service param
@@ -445,7 +454,7 @@ export default function ApplicationPoolPage() {
     parseInboundUrl();
     window.addEventListener('hashchange', parseInboundUrl);
     return () => window.removeEventListener('hashchange', parseInboundUrl);
-  }, []);
+  }, [searchParams, location.search, location.hash]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;

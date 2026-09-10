@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { 
   ArrowRight, 
   GraduationCap, 
@@ -38,7 +39,7 @@ export const ILAWithYouLogo = ({ light = false, size = 'md' }: { light?: boolean
   const taglineSize = size === 'sm' ? 'text-[6px] md:text-[7px]' : size === 'lg' ? 'text-[10px] md:text-[12px]' : 'text-[8px] md:text-[10px]';
 
   return (
-    <a href="#ilas-with-you" className="flex flex-col items-start group hover:opacity-90 transition-opacity drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
+    <Link to="/ilas-with-you" className="flex flex-col items-start group hover:opacity-90 transition-opacity drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
       <div className={`relative ${containerSize} transition-transform duration-500 group-hover:scale-105`}>
         {/* Glow Effect Layer */}
         <div className="absolute inset-0 bg-accent-400/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 animate-pulse" />
@@ -64,13 +65,14 @@ export const ILAWithYouLogo = ({ light = false, size = 'md' }: { light?: boolean
       <span className={`${taglineSize} uppercase tracking-[0.2em] font-black mt-1 pl-1 ${light ? 'text-white drop-shadow-md' : 'text-slate-800 drop-shadow-sm'}`}>
         Where-ever, When-ever, What-ever
       </span>
-    </a>
+    </Link>
   );
 };
 
 export default function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const navigate = useNavigate();
 
   const slides: Slide[] = [
     {
@@ -85,7 +87,7 @@ export default function Hero() {
       integrationTitle: "Educational Guidance Always On",
       integrationDesc: "While studying, get 24/7 education-related and visa-related guidance, expert course recommendations, and carved professional learning paths with the AI companion always assisting you.",
       ctaText: "Enroll in Education",
-      ctaLink: "#applications?tab=Education",
+      ctaLink: "/applications?tab=Education",
       icon: <GraduationCap className="w-16 h-16 text-accent-400" />,
       bgImage: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&q=80",
       overlayColor: "from-brand-900/95 via-brand-900/80 to-transparent",
@@ -103,7 +105,7 @@ export default function Hero() {
       integrationTitle: "Financial & Academic Guard",
       integrationDesc: "ILA's With You tracks your academic milestones and stipend payouts simultaneously, ensuring you never miss a study deadline while maintaining your side-income flow.",
       ctaText: "Apply for Work While You Study",
-      ctaLink: "#applications?tab=Work While You Study",
+      ctaLink: "/applications?tab=Work While You Study",
       icon: <Briefcase className="w-16 h-16 text-emerald-400" />,
       bgImage: "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&q=80",
       overlayColor: "from-emerald-950/95 via-emerald-900/80 to-transparent",
@@ -122,7 +124,7 @@ export default function Hero() {
       integrationTitle: "Global Education Connectivity",
       integrationDesc: "Ilas provides comprehensive assistance to connect your academic goals with the best international institutions.",
       ctaText: "Explore Study Abroad",
-      ctaLink: "#applications?tab=Study Abroad",
+      ctaLink: "/applications?tab=Study Abroad",
       icon: <Globe className="w-16 h-16 text-blue-400" />,
       bgImage: "https://images.unsplash.com/photo-1529400971008-f566de0e6dfc?auto=format&fit=crop&q=80",
       overlayColor: "from-blue-900/95 via-blue-900/80 to-transparent",
@@ -140,7 +142,7 @@ export default function Hero() {
       integrationTitle: "Double Benefit System",
       integrationDesc: "Experience simultaneous growth in both your professional skillset and financial portfolio as you progress.",
       ctaText: "Register for Work While You Study",
-      ctaLink: "#applications?tab=Work While You Study",
+      ctaLink: "/applications?tab=Work While You Study",
       icon: <TrendingUp className="w-16 h-16 text-amber-400" />,
       bgImage: "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&q=80",
       overlayColor: "from-amber-950/95 via-amber-900/80 to-transparent",
@@ -158,7 +160,7 @@ export default function Hero() {
       integrationTitle: "Career Performance Guard",
       integrationDesc: "ILA's With You manages your professional task lists and upskilling roadmap, helping you achieve work targets while keeping your international certification progress on track.",
       ctaText: "Explore Work While You Study",
-      ctaLink: "#applications?tab=Work While You Study",
+      ctaLink: "/applications?tab=Work While You Study",
       icon: <Clock className="w-16 h-16 text-orange-400" />,
       bgImage: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80",
       overlayColor: "from-orange-950/95 via-orange-900/80 to-transparent",
@@ -177,7 +179,7 @@ export default function Hero() {
       integrationTitle: "Total Life Companion",
       integrationDesc: "From sourcing required documentation and preliminary eligibility checks to providing local German contact backup and emergency 24/7 call support—wherever, whenever.",
       ctaText: "Learn About Us",
-      ctaLink: "#applications?tab=Study Abroad",
+      ctaLink: "/applications?tab=Study Abroad",
       icon: <MessageCircle className="w-16 h-16 text-accent-400" />,
       bgImage: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80",
       overlayColor: "from-brand-800/95 via-brand-800/80 to-transparent",
@@ -195,7 +197,7 @@ export default function Hero() {
       integrationTitle: "Documentation & Arrival Guard",
       integrationDesc: "ILA's With You acts as your document vault and arrival coordinator, ensuring your visa papers are perfect and your German pickup is waiting at the airport.",
       ctaText: "Check Visa Services",
-      ctaLink: "#applications?tab=Visa",
+      ctaLink: "/applications?tab=Visa",
       icon: <Plane className="w-16 h-16 text-accent-400" />,
       bgImage: "https://images.unsplash.com/photo-1436491865332-7a61a109c0f3?auto=format&fit=crop&q=80",
       overlayColor: "from-slate-900/95 via-slate-900/80 to-transparent",
@@ -213,7 +215,7 @@ export default function Hero() {
       integrationTitle: "International Job Companion",
       integrationDesc: "ILA's With You scans global markets for your specific profile, filtering designations that offer the highest syndicate management profit-sharing potential.",
       ctaText: "Search Jobs",
-      ctaLink: "#applications?tab=Jobs",
+      ctaLink: "/applications?tab=Jobs",
       icon: <Users className="w-16 h-16 text-accent-400" />,
       bgImage: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80",
       overlayColor: "from-brand-900/95 via-brand-900/80 to-transparent",
@@ -231,7 +233,7 @@ export default function Hero() {
       integrationTitle: "Loyalty & Growth Guard",
       integrationDesc: "ILA's With You tracks every referral and point earned, notifying you precisely when you hit the milestone for your permanent salaried consultant posting.",
       ctaText: "Join Rewards Program",
-      ctaLink: "#applications?tab=Rewards Partner",
+      ctaLink: "/applications?tab=Rewards Partner",
       icon: <Star className="w-16 h-16 text-emerald-400" />,
       bgImage: "https://images.unsplash.com/photo-1553729459-efe14ef6055d?auto=format&fit=crop&q=80",
       overlayColor: "from-emerald-950/95 via-emerald-900/80 to-transparent",
@@ -256,7 +258,7 @@ export default function Hero() {
   }, [isAutoPlaying, nextSlide]);
 
   const openPortal = () => window.dispatchEvent(new CustomEvent('open-portal-login'));
-  const openEligibility = () => window.location.hash = '#applications?tab=Study Abroad';
+  const openEligibility = () => navigate('/applications?tab=Study Abroad');
 
   return (
     <section id="home" className="relative h-screen min-h-[700px] max-h-[1000px] w-full overflow-hidden flex items-center bg-black">
@@ -339,13 +341,13 @@ export default function Hero() {
 
                 {/* 4. Action Buttons */}
                 <div className="flex flex-wrap items-center gap-3">
-                  <a
-                    href={slide.ctaLink}
+                  <Link
+                    to={slide.ctaLink}
                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-brand-900 font-black rounded-xl hover:bg-accent-400 transition-all active:scale-95 text-sm shadow-xl"
                   >
                     {slide.ctaText}
                     <ArrowRight className="w-4 h-4" />
-                  </a>
+                  </Link>
                   <button
                     onClick={openEligibility}
                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 bg-black/40 text-white border-2 border-white/20 backdrop-blur-md font-black rounded-xl hover:bg-white/10 transition-all active:scale-95 text-sm"

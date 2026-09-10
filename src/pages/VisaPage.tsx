@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   GraduationCap, 
   Search, 
@@ -89,18 +90,29 @@ const visaCategories = [
 ];
 
 const benefitItems = [
-  { icon: ShieldCheck, title: "100% Embassy Compliant", highlight: "AI Document Audit", desc: "eliminating common visa rejection errors.", link: "#applications?tab=Visa" },
-  { icon: Gift, title: "Reward Ecosystem", highlight: "Cashback Perks", desc: "per visa milestone & referral rewards.", link: "#rewards" },
-  { icon: Search, title: "Integrated Job Hunting", highlight: "Direct Placement", desc: "with European employer networks.", link: "#jobs" },
-  { icon: Briefcase, title: "Work While You Study", highlight: "Junior Consultant", desc: "stipend during your intake process.", link: "#learn-while-earn" }
+  { icon: ShieldCheck, title: "100% Embassy Compliant", highlight: "AI Document Audit", desc: "eliminating common visa rejection errors.", link: "/applications?tab=Visa" },
+  { icon: Gift, title: "Reward Ecosystem", highlight: "Cashback Perks", desc: "per visa milestone & referral rewards.", link: "/rewards" },
+  { icon: Search, title: "Integrated Job Hunting", highlight: "Direct Placement", desc: "with European employer networks.", link: "/jobs" },
+  { icon: Briefcase, title: "Work While You Study", highlight: "Junior Consultant", desc: "stipend during your intake process.", link: "/work-while-you-study" }
 ];
 
 export default function VisaPage() {
+  const navigate = useNavigate();
   const [selectedVisaId, setSelectedVisaId] = useState(visaCategories[0].id);
   const [targetCountry, setTargetCountry] = useState('Germany');
 
   const navigateTo = (url: string) => { 
-    window.location.hash = url; 
+    if (url.startsWith('#applications') || url.startsWith('#apply')) {
+      const q = url.includes('?') ? url.substring(url.indexOf('?')) : '';
+      navigate(`/applications${q}`);
+    } else if (url === '#learn-while-earn') {
+      navigate('/work-while-you-study');
+    } else if (url.startsWith('#')) {
+      const clean = url.replace('#', '');
+      navigate(`/${clean}`);
+    } else {
+      navigate(url);
+    }
   };
 
   const selectedVisa = visaCategories.find(v => v.id === selectedVisaId) || visaCategories[0];

@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { Facebook, Linkedin, Instagram } from 'lucide-react'
 
 const XIcon = (props: any) => (
@@ -13,21 +14,21 @@ const XIcon = (props: any) => (
 
 const footerLinks = {
   Services: [
-    { label: 'German Language', href: '#education' },
-    { label: 'Ausbildung', href: '#education' },
-    { label: 'Job Placement', href: '#jobs' },
-    { label: 'Visa Services', href: '#visa' },
+    { label: 'German Language', href: '/education' },
+    { label: 'Ausbildung', href: '/education' },
+    { label: 'Job Placement', href: '/jobs' },
+    { label: 'Visa Services', href: '/visa' },
   ],
   Company: [
-    { label: 'About Us', href: '#about' },
-    { label: 'Rewards Program', href: '#rewards' },
-    { label: 'Contact', href: '#about' },
+    { label: 'About Us', href: '/about' },
+    { label: 'Rewards Program', href: '/rewards' },
+    { label: 'Contact', href: '/about' },
     { label: 'Portal Login', href: '#', onClick: () => window.dispatchEvent(new CustomEvent('open-portal-login')) },
   ],
   Legal: [
-    { label: 'Privacy Policy', href: '#privacy-policy' },
-    { label: 'Terms of Service', href: '#' },
-    { label: 'Cookie Policy', href: '#' },
+    { label: 'Privacy Policy', href: '/privacy-policy' },
+    { label: 'Terms of Service', href: '/privacy-policy' },
+    { label: 'Cookie Policy', href: '/privacy-policy' },
   ],
 }
 
@@ -70,14 +71,14 @@ export default function Footer() {
                     {'onClick' in link && link.onClick ? (
                       <button
                         onClick={link.onClick}
-                        className="text-sm text-blue-200 hover:text-white transition-colors"
+                        className="text-sm text-blue-200 hover:text-white transition-colors cursor-pointer"
                       >
                         {link.label}
                       </button>
                     ) : (
-                      <a href={link.href} className="text-sm text-blue-200 hover:text-white transition-colors">
+                      <Link to={link.href} className="text-sm text-blue-200 hover:text-white transition-colors">
                         {link.label}
-                      </a>
+                      </Link>
                     )}
                   </li>
                 ))}

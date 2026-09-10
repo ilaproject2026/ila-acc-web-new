@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Cookie, X } from 'lucide-react';
 
 const CookieBanner: React.FC = () => {
@@ -72,13 +73,13 @@ const CookieBanner: React.FC = () => {
           <div className="text-xs sm:text-sm text-slate-300 leading-relaxed">
             <p>
               We use cookies to personalize content, analyze website traffic, and ensure an optimal experience across all ILA Global programs and portals.{' '}
-              <a
-                href="#privacy-policy"
+              <Link
+                to="/privacy-policy"
                 onClick={() => setShowBanner(false)}
                 className="text-brand-400 hover:text-brand-300 underline font-semibold transition-colors inline-flex items-center gap-1"
               >
                 Privacy Policy
-              </a>
+              </Link>
               .
             </p>
           </div>

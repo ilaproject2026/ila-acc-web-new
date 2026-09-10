@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useParams, useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { 
   Sparkles, 
   CheckCircle2, 
@@ -234,7 +235,11 @@ const CoursePathTile = ({
   );
 };
 
-export default function CoursePage({ courseTitle: initialTitle = "German Language A1–C2", category: initialCategory = "Language & Proficiency" }: CoursePageProps) {
+export default function CoursePage({ courseTitle: initialTitle = "German Language A1–C2", category: initialCategory = "Language & Proficiency" }: CoursePageProps = {}) {
+  const { courseIdOrSlug } = useParams<{ courseIdOrSlug?: string }>();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+
   const [courses, setCourses] = useState<GlobalCourse[]>([]);
   const [paths, setPaths] = useState<GlobalPath[]>([]);
   const [batches, setBatches] = useState<GlobalBatch[]>([]);
@@ -251,14 +256,44 @@ export default function CoursePage({ courseTitle: initialTitle = "German Languag
 
       // Resolve initial active course
       if (cList.length > 0) {
+        let matched: GlobalCourse | undefined;
+
+        // 1. Try URL param courseIdOrSlug
+        if (courseIdOrSlug) {
+          const targetSlug = courseIdOrSlug.toLowerCase();
+          matched = cList.find(c => 
+            c.id === courseIdOrSlug ||
+            c.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') === targetSlug ||
+            c.name.toLowerCase() === targetSlug ||
+            c.name.toLowerCase().includes(targetSlug) ||
+            targetSlug.includes(c.id.toLowerCase())
+          );
+        }
+
+        // 2. Try URL search parameter (?id=... or ?course=...)
+        if (!matched && searchParams.get('id')) {
+          const qId = searchParams.get('id');
+          matched = cList.find(c => c.id === qId);
+        }
+        if (!matched && searchParams.get('course')) {
+          const qCourse = searchParams.get('course')!.toLowerCase();
+          matched = cList.find(c => c.name.toLowerCase().includes(qCourse));
+        }
+
+        // 3. Try legacy hash
         const hash = window.location.hash;
-        let matched = cList.find(c => hash.includes(c.id));
+        if (!matched && hash) {
+          matched = cList.find(c => hash.includes(c.id));
+        }
+
+        // 4. Try initialTitle prop
         if (!matched && initialTitle) {
           matched = cList.find(c => 
             c.name.toLowerCase().includes(initialTitle.toLowerCase()) || 
             initialTitle.toLowerCase().includes(c.name.toLowerCase())
           );
         }
+
         setActiveCourseId(matched ? matched.id : cList[0].id);
       }
     };
@@ -271,7 +306,7 @@ export default function CoursePage({ courseTitle: initialTitle = "German Languag
       window.removeEventListener('ilas-courses-changed', loadAllData);
       window.removeEventListener('ilas-paths-changed', loadAllData);
     };
-  }, [initialTitle]);
+  }, [courseIdOrSlug, searchParams, initialTitle]);
 
   // Active course resolution
   const activeCourse: GlobalCourse | undefined = courses.find(c => c.id === activeCourseId) || courses[0];
@@ -324,11 +359,13 @@ export default function CoursePage({ courseTitle: initialTitle = "German Languag
     const courseNameParam = encodeURIComponent(activeCourse?.name || initialTitle);
     const batchParam = batch ? `&batch=${encodeURIComponent(batch)}` : '';
     const slotParam = slot ? `&slot=${encodeURIComponent(slot)}` : '';
-    window.location.hash = `#applications?course=${courseNameParam}&info=${encodeURIComponent(extraInfo || '')}${batchParam}${slotParam}`;
+    navigate(`/applications?course=${courseNameParam}&info=${encodeURIComponent(extraInfo || '')}${batchParam}${slotParam}`);
   };
 
   const handleSelectCourse = (course: GlobalCourse) => {
     setActiveCourseId(course.id);
+    const slug = course.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    navigate(`/course/${slug}`);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -409,17 +446,14 @@ export default function CoursePage({ courseTitle: initialTitle = "German Languag
               </span>
 
               {/* 1. Tutor Path Key (Comes First) */}
-              <a
-                href="#tutor-path"
+              <Link
+                to="/tutor-path"
                 className="px-4 py-2 rounded-full text-xs sm:text-sm font-black transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 bg-gradient-to-r from-amber-500 via-orange-500 to-brand-600 text-white shadow-sm hover:shadow-md hover:scale-105 mr-1"
                 title="Tutor Path: Intelli-Coach AI & Course Page Blueprint"
               >
                 <BrainCircuit className="w-4 h-4 text-amber-100 animate-pulse" />
                 <span>Tutor Path</span>
-                {/* <span className="text-[10px] px-1.5 py-0.2 bg-white/20 rounded-full font-bold uppercase tracking-wider hidden sm:inline">
-                  Intelli-Coach
-                </span> */}
-              </a>
+              </Link>
 
               {subNavCourses.map((c) => {
                 const isActive = c.id === activeCourse?.id;
@@ -840,9 +874,9 @@ export default function CoursePage({ courseTitle: initialTitle = "German Languag
                   </p>
                 </div>
               </div>
-              <a href="#work-while-you-study-page" className="px-6 py-3 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black rounded-xl text-xs transition-all shadow-md whitespace-nowrap">
+              <Link to="/work-while-you-study" className="px-6 py-3 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black rounded-xl text-xs transition-all shadow-md whitespace-nowrap">
                 Register for Jobs
-              </a>
+              </Link>
             </div>
           </div>
         </section>

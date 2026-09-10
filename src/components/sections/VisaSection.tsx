@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import { Briefcase, Camera, GraduationCap, Search, Bot, FileCheck } from 'lucide-react'
 
 const visaTypes = [
@@ -24,6 +25,7 @@ const visaTypes = [
 ]
 
 export default function VisaSection() {
+  const navigate = useNavigate();
   return (
     <section id="visa" className="section-padding bg-slate-50">
       <div className="container-max">
@@ -81,7 +83,7 @@ export default function VisaSection() {
               </div>
               
               <button 
-                onClick={() => window.location.hash = '#applications?tab=Visa'}
+                onClick={() => navigate('/applications?tab=Visa')}
                 className="w-full mt-6 py-3.5 px-4 bg-brand-700 hover:bg-brand-800 text-white rounded-xl text-sm font-bold flex items-center justify-center gap-2 shadow-lg transition-all"
               >
                 <Bot className="w-4 h-4 text-amber-400" /> Run AI Visa Eligibility Check

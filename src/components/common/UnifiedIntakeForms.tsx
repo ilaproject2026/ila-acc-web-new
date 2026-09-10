@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { X, Sparkles, ShieldCheck, Mail, ClipboardCheck, Plane, Briefcase, GraduationCap } from 'lucide-react';
 import { saveInquiry } from '../../lib/db';
 
 type FormType = 'visa' | 'course' | 'job' | 'earn-learn';
 
 export default function UnifiedIntakeForms() {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [formType, setFormType] = useState<FormType>('visa');
   const [step, setStep] = useState(1);
@@ -424,7 +426,7 @@ export default function UnifiedIntakeForms() {
                 <button 
                   onClick={() => {
                     setOpen(false);
-                    window.location.hash = '#admin-portal';
+                    navigate('/admin');
                   }} 
                   className="w-full py-4 bg-slate-900 hover:bg-slate-800 text-white rounded-2xl font-bold transition-all shadow-md text-xs uppercase tracking-widest flex items-center justify-center gap-1.5"
                 >

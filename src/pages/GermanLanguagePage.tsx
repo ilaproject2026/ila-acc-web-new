@@ -1,11 +1,13 @@
+import { useNavigate } from 'react-router-dom';
 import { Bot, Sparkles, BookOpen, Clock, Target, CheckCircle2, ChevronRight, Globe2, Stethoscope, Briefcase, MessageSquare, ShieldCheck } from 'lucide-react';
 
 export default function GermanLanguagePage() {
+  const navigate = useNavigate();
   const navigateToApplication = (category = 'Education', courseLevel = '') => {
     if (courseLevel) {
       localStorage.setItem('selected_german_level', courseLevel);
     }
-    window.location.hash = `#applications?tab=${encodeURIComponent(category)}`;
+    navigate(`/applications?tab=${encodeURIComponent(category)}`);
   };
 
   const levels = [

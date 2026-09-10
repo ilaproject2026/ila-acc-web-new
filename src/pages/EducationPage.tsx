@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { 
   Star, BrainCircuit, Play, ArrowRight, Zap, MessageCircle, 
   Crown, Briefcase, GraduationCap, Gift, Code, 
@@ -13,23 +14,24 @@ import {
 import EducationTourGuide from '../components/common/EducationTourGuide';
 
 const benefitItems = [
-  { icon: Briefcase, title: "Work While You Study", highlight: "Junior Consultant", desc: "with verified monthly stipend.", link: "#learn-while-earn" },
-  { icon: Gift, title: "Reward Plan", highlight: "Cashback Rewards", desc: "per cleared module & peer referrals.", link: "#rewards" },
-  { icon: Search, title: "Job Hunting", highlight: "Direct Placement", desc: "with European recruiter network.", link: "#jobs-page" },
-  { icon: GraduationCap, title: "€0 Cost German Uni", highlight: "100% Free Tuition", desc: "in funded public universities.", link: "#study-abroad" }
+  { icon: Briefcase, title: "Work While You Study", highlight: "Junior Consultant", desc: "with verified monthly stipend.", link: "/work-while-you-study" },
+  { icon: Gift, title: "Reward Plan", highlight: "Cashback Rewards", desc: "per cleared module & peer referrals.", link: "/rewards" },
+  { icon: Search, title: "Job Hunting", highlight: "Direct Placement", desc: "with European recruiter network.", link: "/jobs" },
+  { icon: GraduationCap, title: "€0 Cost German Uni", highlight: "100% Free Tuition", desc: "in funded public universities.", link: "/study-abroad" }
 ];
 
 export default function EducationPage() {
+  const navigate = useNavigate();
   const [courses, setCourses] = useState<GlobalCourse[]>([]);
   const [paths, setPaths] = useState<GlobalPath[]>([]);
   const [categories, setCategories] = useState<GlobalCategory[]>([]);
   const [activeNav, setActiveNav] = useState('');
   
   // Filtering & View States for Blocks / Catalog Section
-  const [selectedCategory, setSelectedCategory] = useState('All');
-  const [selectedSubCategory, setSelectedSubCategory] = useState('All');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [viewMode, setViewMode] = useState<'grid' | 'line'>('grid');
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [selectedSubCategory, setSelectedSubCategory] = useState<string>('All');
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
   const loadData = () => {
     const courseData = getGlobalCourses();
@@ -56,7 +58,20 @@ export default function EducationPage() {
   }, []);
 
   const navigateTo = (url: string) => { 
-    window.location.hash = url; 
+    if (url.startsWith('#applications') || url.startsWith('#apply')) {
+      const q = url.includes('?') ? url.substring(url.indexOf('?')) : '';
+      navigate(`/applications${q}`);
+    } else if (url.startsWith('#course-')) {
+      const slug = url.replace('#course-', '');
+      navigate(`/course/${slug}`);
+    } else if (url.startsWith('#course')) {
+      navigate('/course');
+    } else if (url.startsWith('#')) {
+      const clean = url.replace('#', '');
+      navigate(`/${clean}`);
+    } else {
+      navigate(url);
+    }
   };
 
   const openCourseDemo = (courseName?: string) => { 
@@ -142,14 +157,14 @@ export default function EducationPage() {
       <div id="edu-tour-nav" className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200 py-3 mb-10 transition-all duration-300 shadow-2xs">
         <div className="container-max mx-auto px-6 flex items-center justify-start md:justify-center gap-3 md:gap-6 overflow-x-auto hide-scrollbar">
           {/* 1. Tutor Path Key (Comes First) */}
-          <a
-            href="#tutor-path"
+          <Link
+            to="/tutor-path"
             className="text-xs md:text-sm font-black pb-1.5 transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 text-amber-700 hover:text-amber-800 bg-amber-50 hover:bg-amber-100 px-3 py-1 rounded-full border border-amber-300 shadow-xs mr-1"
             title="Tutor Path: Intelli-Coach AI & Course Page Instructions"
           >
             <BrainCircuit className="w-3.5 h-3.5 text-amber-600 animate-pulse" />
             <span>Tutor Path (Intelli-Coach)</span>
-          </a>
+          </Link>
 
           {mainViewCourses.map((course, idx) => (
             <button
@@ -500,15 +515,15 @@ export default function EducationPage() {
 
                   <button
                     type="button"
-                    onClick={() => setViewMode('line')}
+                    onClick={() => setViewMode('list')}
                     className={`py-2 px-3 rounded-xl text-xs font-bold transition-all border flex items-center justify-center gap-1.5 cursor-pointer ${
-                      viewMode === 'line'
+                      viewMode === 'list'
                         ? 'bg-slate-900 text-white border-slate-900 shadow-xs'
                         : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
                     }`}
                   >
                     <List className="w-3.5 h-3.5" />
-                    <span>Line View</span>
+                    <span>List View</span>
                   </button>
                 </div>
               </div>

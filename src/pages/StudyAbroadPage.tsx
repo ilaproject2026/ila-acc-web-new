@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   GraduationCap, 
   Building2, 
@@ -16,16 +17,25 @@ import {
   Globe, 
   Home, 
   Landmark, 
-  FileText,
+  FileText, 
   Code
 } from 'lucide-react';
 import EligibilityChecker from '../components/common/EligibilityChecker';
 
 export default function StudyAbroadPage() {
+  const navigate = useNavigate();
   const [activeNav, setActiveNav] = useState('public-universities');
 
   const navigateTo = (url: string) => { 
-    window.location.hash = url; 
+    if (url.startsWith('#applications') || url.startsWith('#apply')) {
+      const q = url.includes('?') ? url.substring(url.indexOf('?')) : '';
+      navigate(`/applications${q}`);
+    } else if (url.startsWith('#')) {
+      const clean = url.replace('#', '');
+      navigate(`/${clean}`);
+    } else {
+      navigate(url);
+    }
   };
 
   const scrollTo = (id: string) => {
@@ -38,10 +48,10 @@ export default function StudyAbroadPage() {
   };
 
   const benefitItems = [
-    { icon: GraduationCap, title: "€0 Tuition Public Uni", highlight: "100% Free Tuition", desc: "in world-class German universities.", link: "#applications?tab=Study Abroad" },
-    { icon: Briefcase, title: "Part-Time Work Rights", highlight: "20 Hrs/Week", desc: "legal student work allowance with good pay.", link: "#learn-while-earn" },
-    { icon: TrendingUp, title: "18-Month Job Seeking Visa", highlight: "Post-Study Visa", desc: "to transition into European corporate jobs.", link: "#jobs" },
-    { icon: Gift, title: "Reward Ecosystem", highlight: "Cashback Perks", desc: "per academic milestone & peer referrals.", link: "#rewards" }
+    { icon: GraduationCap, title: "€0 Tuition Public Uni", highlight: "100% Free Tuition", desc: "in world-class German universities.", link: "/applications?tab=Study Abroad" },
+    { icon: Briefcase, title: "Part-Time Work Rights", highlight: "20 Hrs/Week", desc: "legal student work allowance with good pay.", link: "/work-while-you-study" },
+    { icon: TrendingUp, title: "18-Month Job Seeking Visa", highlight: "Post-Study Visa", desc: "to transition into European corporate jobs.", link: "/jobs" },
+    { icon: Gift, title: "Reward Ecosystem", highlight: "Cashback Perks", desc: "per academic milestone & peer referrals.", link: "/rewards" }
   ];
 
   const complimentaryServices = [

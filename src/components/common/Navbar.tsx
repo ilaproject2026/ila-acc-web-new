@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Menu, X, ChevronDown, LogIn } from 'lucide-react'
 import { navItems } from '../../data/navigation'
 
@@ -15,26 +16,10 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [showNavbar, setShowNavbar] = useState(true)
   const [lastScrollY, setLastScrollY] = useState(0)
-  const [activeHash, setActiveHash] = useState(
-    window.location.hash || '#home'
-  )
 
+  const location = useLocation()
+  const navigate = useNavigate()
   const navRef = useRef<HTMLElement>(null)
-
-  // --------------------------------------------------
-  // Hash handling
-  // --------------------------------------------------
-  useEffect(() => {
-    const handleHashChange = () => {
-      setActiveHash(window.location.hash || '#home')
-    }
-
-    window.addEventListener('hashchange', handleHashChange)
-
-    return () => {
-      window.removeEventListener('hashchange', handleHashChange)
-    }
-  }, [])
 
   // --------------------------------------------------
   // Scroll behavior
@@ -133,58 +118,36 @@ export default function Navbar() {
     children?: NavChildItem[]
   }) => {
     if (!item) return false
-    const currentHash = activeHash || '#home'
-    const cleanCurrent = currentHash.split('?')[0]
+    const currentPath = location.pathname
+    const currentHash = location.hash
 
-    // 1. Direct match with item.href
     if (item.href) {
-      const cleanItemHref = item.href.split('?')[0]
-      if (
-        cleanCurrent === cleanItemHref ||
-        cleanCurrent.startsWith(cleanItemHref + '#') ||
-        cleanCurrent.startsWith(cleanItemHref + '/')
-      ) {
+      const [itemPath, itemHash] = item.href.split('#')
+      if (itemPath === '/' && currentPath === '/' && !currentHash) {
+        return true
+      }
+      if (itemPath !== '/' && currentPath === itemPath && (!itemHash || currentHash === `#${itemHash}`)) {
+        return true
+      }
+      if (itemPath !== '/' && currentPath.startsWith(itemPath + '/')) {
         return true
       }
     }
 
     // Special routes:
     // Course pages and Tutor Path should highlight "All Courses"
-    if (item.href === '#education') {
+    if (item.href === '/education') {
       if (
-        cleanCurrent.startsWith('#course-') ||
-        cleanCurrent.startsWith('#tutor-path')
+        currentPath.startsWith('/course') ||
+        currentPath.startsWith('/tutor-path')
       ) {
         return true
       }
     }
 
-    // Jobs alternate route
-    if (
-      item.href === '#jobs-page' && 
-      (cleanCurrent === '#jobs' || cleanCurrent.startsWith('#jobs#'))
-    ) {
-      return true
-    }
-
-    // Rewards alternate route
-    if (
-      item.href === '#rewards' && 
-      (cleanCurrent === '#rewards-page' || cleanCurrent.startsWith('#rewards-page#'))
-    ) {
-      return true
-    }
-
     // 2. Exact match on any child route
     if (item.children && Array.isArray(item.children)) {
-      return item.children.some((child) => {
-        if (!child || !child.href) return false
-        const cleanChild = child.href.split('?')[0]
-        return (
-          cleanCurrent === cleanChild ||
-          cleanCurrent.startsWith(cleanChild + '#')
-        )
-      })
+      return item.children.some((child) => isChildActive(child))
     }
 
     return false
@@ -192,14 +155,15 @@ export default function Navbar() {
 
   const isChildActive = (child: NavChildItem) => {
     if (!child || !child.href) return false
-    const currentHash = activeHash || '#home'
-    const cleanCurrent = currentHash.split('?')[0]
-    const cleanChild = child.href.split('?')[0]
+    const [childPath, childHash] = child.href.split('#')
+    const currentPath = location.pathname
+    const currentHash = location.hash
 
-    return (
-      cleanCurrent === cleanChild ||
-      cleanCurrent.startsWith(cleanChild + '#')
-    )
+    if (childHash) {
+      return currentPath === childPath && currentHash === `#${childHash}`
+    }
+
+    return currentPath === childPath
   }
 
   return (
@@ -239,8 +203,8 @@ export default function Navbar() {
           {/* ==================================================
               LOGO
           ================================================== */}
-          <a
-            href="#home"
+          <Link
+            to="/"
             className="
               flex flex-col
               shrink-0
@@ -278,7 +242,7 @@ export default function Navbar() {
             >
               INTERNATIONAL LEARNING ALLIANCE
             </span>
-          </a>
+          </Link>
 
           {/* ==================================================
               DESKTOP NAVIGATION
@@ -311,8 +275,8 @@ export default function Navbar() {
                   >
                     {/* Parent navigation item */}
                     <div className="flex items-center">
-                      <a
-                        href={item.href || '#'}
+                      <Link
+                        to={item.href || '#'}
                         className={`
                           relative
                           flex
@@ -350,7 +314,7 @@ export default function Navbar() {
                             "
                           />
                         )}
-                      </a>
+                      </Link>
 
                       {/* Dropdown button */}
                       <button
@@ -424,9 +388,9 @@ export default function Navbar() {
                       >
                         {item.children.map(
                           (child: NavChildItem) => (
-                            <a
+                            <Link
                               key={child.label}
-                              href={child.href}
+                              to={child.href}
                               onClick={(event) => {
                                 if (child.action) {
                                   event.preventDefault()
@@ -438,17 +402,6 @@ export default function Navbar() {
 
                                 setOpenDropdown(null)
                                 setMobileOpen(false)
-
-                                if (
-                                  window.location.hash ===
-                                  child.href
-                                ) {
-                                  window.dispatchEvent(
-                                    new HashChangeEvent(
-                                      'hashchange'
-                                    )
-                                  )
-                                }
                               }}
                               className={`
                                 block
@@ -483,15 +436,15 @@ export default function Navbar() {
                                   className="
                                     block
                                     text-xs
-                                    text-slate-500
-                                    mt-1
-                                    leading-relaxed
+                                    text-slate-600
+                                    mt-0.5
+                                    line-clamp-1
                                   "
                                 >
                                   {child.description}
                                 </span>
                               )}
-                            </a>
+                            </Link>
                           )
                         )}
                       </div>
@@ -501,9 +454,9 @@ export default function Navbar() {
               }
 
               return (
-                <a
+                <Link
                   key={item.label}
-                  href={item.href}
+                  to={item.href || '/'}
                   className={`
                     relative
                     flex
@@ -543,7 +496,7 @@ export default function Navbar() {
                       "
                     />
                   )}
-                </a>
+                </Link>
               )
             })}
           </nav>
@@ -562,34 +515,42 @@ export default function Navbar() {
             "
           >
             {/* ILA With You */}
-            <a
-              href="#ilas-with-you"
+            <Link
+              to="/ilas-with-you"
               aria-label="ILAs With You"
               className="
                 inline-flex
                 items-center
-                justify-center
                 gap-1.5
                 px-2.5
                 min-[1400px]:px-3.5
-                py-2
-                min-[1400px]:py-2.5
+                py-1.5
                 bg-gradient-to-r
-                from-indigo-500
-                to-purple-600
+                from-indigo-600
+                via-purple-600
+                to-pink-600
                 text-white
-                text-[11px]
-                min-[1400px]:text-xs
-                font-semibold
-                rounded-lg
-                hover:from-indigo-600
-                hover:to-purple-700
+                text-xs
+                min-[1400px]:text-[13px]
+                font-bold
+                rounded-full
+                shadow-xs
+                hover:shadow-md
+                hover:scale-105
                 transition-all
-                shadow-sm
-                whitespace-nowrap
+                duration-300
+                cursor-pointer
+                shrink-0
               "
             >
-              <span className="relative flex h-2.5 w-2.5 shrink-0">
+              <span
+                className="
+                  relative
+                  flex
+                  h-2
+                  w-2
+                "
+              >
                 <span
                   className="
                     animate-ping
@@ -608,75 +569,62 @@ export default function Navbar() {
                     relative
                     inline-flex
                     rounded-full
-                    h-2.5
-                    w-2.5
+                    h-2
+                    w-2
                     bg-white
                   "
                 />
               </span>
 
-              <span className="hidden min-[1400px]:inline">
-                Ilas With You
+              <span className="whitespace-nowrap">
+                ILA With You
               </span>
-
-              <span className="inline min-[1400px]:hidden">
-                ILA
-              </span>
-            </a>
+            </Link>
 
             {/* Portal Login */}
             <button
               type="button"
               onClick={openPortal}
-              aria-label="Portal Login"
               className="
                 inline-flex
                 items-center
-                justify-center
                 gap-1.5
                 px-2.5
                 min-[1400px]:px-3.5
-                py-2
-                min-[1400px]:py-2.5
-                bg-brand-700
-                text-white
-                text-[11px]
-                min-[1400px]:text-xs
-                font-semibold
-                rounded-lg
-                hover:bg-brand-800
-                transition-colors
-                shadow-sm
-                whitespace-nowrap
+                py-1.5
+                rounded-full
+                text-xs
+                min-[1400px]:text-[13px]
+                font-bold
+                transition-all
+                duration-200
                 cursor-pointer
+                whitespace-nowrap
+                shrink-0
+                bg-slate-900
+                text-white
+                hover:bg-slate-800
+                shadow-xs
               "
             >
               <LogIn className="w-3.5 h-3.5" />
 
-              <span className="hidden min-[1400px]:inline">
-                Portal Login
-              </span>
-
-              <span className="inline min-[1400px]:hidden">
-                Login
-              </span>
+              <span>Portal Login</span>
             </button>
           </div>
 
           {/* ==================================================
-              TABLET / MOBILE MENU BUTTON
-              Below lg (1024px)
+              MOBILE HAMBURGER BUTTON
           ================================================== */}
           <button
             type="button"
-            onClick={() => {
+            onClick={() =>
               setMobileOpen(!mobileOpen)
-              setOpenDropdown(null)
-            }}
+            }
             className="
               lg:hidden
               ml-auto
-              p-2.5
+              p-2
               rounded-lg
               text-slate-600
               hover:bg-slate-100
@@ -746,8 +694,8 @@ export default function Navbar() {
                         }
                       `}
                     >
-                      <a
-                        href={item.href || '#'}
+                      <Link
+                        to={item.href || '#'}
                         onClick={() =>
                           setMobileOpen(false)
                         }
@@ -765,7 +713,7 @@ export default function Navbar() {
                         `}
                       >
                         {item.label}
-                      </a>
+                      </Link>
 
                       <button
                         type="button"
@@ -814,9 +762,9 @@ export default function Navbar() {
                       >
                         {item.children.map(
                           (child: NavChildItem) => (
-                            <a
+                            <Link
                               key={child.label}
-                              href={child.href}
+                              to={child.href}
                               onClick={(event) => {
                                 if (child.action) {
                                   event.preventDefault()
@@ -828,17 +776,6 @@ export default function Navbar() {
 
                                 setOpenDropdown(null)
                                 setMobileOpen(false)
-
-                                if (
-                                  window.location.hash ===
-                                  child.href
-                                ) {
-                                  window.dispatchEvent(
-                                    new HashChangeEvent(
-                                      'hashchange'
-                                    )
-                                  )
-                                }
                               }}
                               className={`
                                 block
@@ -869,7 +806,7 @@ export default function Navbar() {
                                   {child.description}
                                 </span>
                               )}
-                            </a>
+                            </Link>
                           )
                         )}
                       </div>
@@ -879,9 +816,9 @@ export default function Navbar() {
               }
 
               return (
-                <a
+                <Link
                   key={item.label}
-                  href={item.href}
+                  to={item.href || '/'}
                   onClick={() => setMobileOpen(false)}
                   className={`
                     block
@@ -899,7 +836,7 @@ export default function Navbar() {
                   `}
                 >
                   {item.label}
-                </a>
+                </Link>
               )
             })}
 
@@ -918,8 +855,8 @@ export default function Navbar() {
                 border-slate-100
               "
             >
-              <a
-                href="#ilas-with-you"
+              <Link
+                to="/ilas-with-you"
                 onClick={() => setMobileOpen(false)}
                 className="
                   inline-flex
@@ -948,7 +885,7 @@ export default function Navbar() {
                 />
 
                 Ilas With You
-              </a>
+              </Link>
 
               <button
                 type="button"

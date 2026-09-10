@@ -1,15 +1,19 @@
 import Navbar from './components/common/Navbar'
-import Hero from './components/common/Hero'
 import Footer from './components/common/Footer'
 import PortalLogin from './components/common/PortalLogin'
 import LanguageTrainer from './components/common/LanguageTrainer'
 import LiveConsultant from './components/common/LiveConsultant'
 import UnifiedIntakeForms from './components/common/UnifiedIntakeForms'
+import FloatingContact from './components/common/FloatingContact'
+import CookieBanner from './components/common/CookieBanner'
+import ScrollHandler from './components/common/ScrollHandler'
 
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { logVisitorActivity } from './lib/db'
+
 import HomePage from './pages/HomePage'
 import GermanLanguagePage from './pages/GermanLanguagePage'
-import { logVisitorActivity, getGlobalCourses } from './lib/db'
 import StudentDashboard from './pages/StudentDashboard'
 import AdminPortal from './pages/AdminPortal'
 import CoursePage from './pages/CoursePage'
@@ -19,159 +23,91 @@ import WorkWhileYouStudyPage from './pages/WorkWhileYouStudyPage'
 import RewardsPage from './pages/RewardsPage'
 import AboutUsPage from './pages/AboutUsPage'
 import IlasWithYouPage from './pages/IlasWithYouPage'
-import FloatingContact from './components/common/FloatingContact'
 import StudyAbroadPage from './pages/StudyAbroadPage'
 import EducationPage from './pages/EducationPage'
 import ApplicationPoolPage from './pages/ApplicationPoolPage'
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
 import TutorPathPage from './pages/TutorPathPage'
-import CookieBanner from './components/common/CookieBanner'
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('home')
-  const [activeCourseTitle, setActiveCourseTitle] = useState('')
-  const [activeCourseCategory, setActiveCourseCategory] = useState('')
+  const location = useLocation()
 
+  // Track visitor engagement per route
   useEffect(() => {
-    const startTime = Date.now();
+    const startTime = Date.now()
     return () => {
-      const timeSpent = Math.round((Date.now() - startTime) / 1000);
+      const timeSpent = Math.round((Date.now() - startTime) / 1000)
       if (timeSpent > 0) {
-        const pageLabel = currentPage === 'course-page' ? activeCourseTitle || 'Course Page' : currentPage;
-        logVisitorActivity(pageLabel, timeSpent);
-      }
-    };
-  }, [currentPage, activeCourseTitle]);
-
-  useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash
-      
-      if (hash === '#master-hub' || hash === '#department-hub') {
-        setCurrentPage('master-hub')
-        window.scrollTo(0, 0)
-      } else if (hash === '#german-language' || hash === '#course-german-language') {
-        setCurrentPage('course-page')
-        setActiveCourseTitle('German Language A1–C2')
-        setActiveCourseCategory('Language & Proficiency')
-        window.scrollTo(0, 0)
-      } else if (hash === '#course-ielts') {
-        setCurrentPage('course-page')
-        setActiveCourseTitle('IELTS / TOEFL / PTE')
-        setActiveCourseCategory('English Proficiency')
-        window.scrollTo(0, 0)
-      } else if (hash === '#course-software-engineering') {
-        setCurrentPage('course-page')
-        setActiveCourseTitle('Software Engineering')
-        setActiveCourseCategory('Full-Stack & Cloud Architecture')
-        window.scrollTo(0, 0)
-      } else if (hash.startsWith('#course-') || hash === '#course-page' || hash.startsWith('#course-page#')) {
-        setCurrentPage('course-page')
-        const courseIdOrSlug = hash.replace('#course-', '').replace('#course-page#', '').replace('#course-page', '')
-        if (courseIdOrSlug) {
-          const allCourses = getGlobalCourses();
-          const match = allCourses.find(c => c.id === courseIdOrSlug || c.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') === courseIdOrSlug.toLowerCase() || c.name.toLowerCase() === courseIdOrSlug.toLowerCase());
-          if (match) {
-            setActiveCourseTitle(match.name);
-            setActiveCourseCategory(match.category || match.top_title || 'Specialized Program');
-          } else {
-            setActiveCourseTitle(courseIdOrSlug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '));
-            setActiveCourseCategory('Specialized Program');
-          }
-        }
-        window.scrollTo(0, 0)
-      } else if (hash === '#student-dashboard') {
-        setCurrentPage('student-dashboard')
-        window.scrollTo(0, 0)
-      } else if (hash === '#admin-portal' || hash === '#admin-dashboard' || hash === '#erp-portal') {
-        setCurrentPage('admin-portal')
-        window.scrollTo(0, 0)
-      } else if (hash === '#jobs-page') {
-        setCurrentPage('jobs-page')
-        window.scrollTo(0, 0)
-      } else if (hash === '#visa-page' || hash.startsWith('#visa-page#')) {
-        setCurrentPage('visa-page')
-        if (hash === '#visa-page') window.scrollTo(0, 0)
-      } else if (hash === '#work-while-you-study-page' || hash.startsWith('#work-while-you-study-page#')) {
-        setCurrentPage('work-while-you-study-page')
-        if (hash === '#work-while-you-study-page') window.scrollTo(0, 0)
-      } else if (hash === '#rewards' || hash === '#rewards-page') {
-        setCurrentPage('rewards-page')
-        window.scrollTo(0, 0)
-      } else if (hash === '#about') {
-        setCurrentPage('about-us')
-        window.scrollTo(0, 0)
-      } else if (hash === '#ilas-with-you') {
-        setCurrentPage('ilas-with-you')
-        window.scrollTo(0, 0)
-      } else if (hash.startsWith('#applications') || hash.startsWith('#apply')) {
-        setCurrentPage('applications')
-        window.scrollTo(0, 0)
-      } else if (hash === '#privacy-policy') {
-        setCurrentPage('privacy-policy')
-        window.scrollTo(0, 0)
-      } else if (hash === '#study-abroad' || hash.startsWith('#study-abroad#')) {
-        setCurrentPage('study-abroad')
-        if (hash === '#study-abroad') window.scrollTo(0, 0)
-      } else if (hash === '#tutor-path' || hash.startsWith('#tutor-path')) {
-        setCurrentPage('tutor-path')
-        window.scrollTo(0, 0)
-      } else if (hash === '#education' || hash.startsWith('#education#')) {
-        setCurrentPage('education')
-        if (hash === '#education') window.scrollTo(0, 0)
-      } else {
-        setCurrentPage('home')
-        window.scrollTo(0, 0)
+        logVisitorActivity(location.pathname, timeSpent)
       }
     }
-    
-    window.addEventListener('hashchange', handleHashChange)
-    handleHashChange()
-    
-    return () => window.removeEventListener('hashchange', handleHashChange)
-  }, [])
+  }, [location.pathname])
 
-  const isAdminPage = currentPage === 'admin-portal' || currentPage === 'master-hub'
+  const adminPaths = [
+    '/admin',
+    '/admin-portal',
+    '/admin-dashboard',
+    '/master-hub',
+    '/department-hub',
+    '/erp-portal',
+  ]
+  const isAdminPage = adminPaths.some(
+    (p) => location.pathname === p || location.pathname.startsWith(p + '/')
+  )
 
   return (
     <div className="min-h-screen w-full max-w-full overflow-x-hidden flex flex-col relative">
+      <ScrollHandler />
       {!isAdminPage && <Navbar />}
       <main className="w-full flex-grow">
-        {currentPage === 'master-hub' ? (
-          <AdminPortal />
-        ) : currentPage === 'german-language' ? (
-          <GermanLanguagePage />
-        ) : currentPage === 'course-page' ? (
-          <CoursePage courseTitle={activeCourseTitle} category={activeCourseCategory} />
-        ) : currentPage === 'student-dashboard' ? (
-          <StudentDashboard />
-        ) : currentPage === 'admin-portal' ? (
-          <AdminPortal />
-        ) : currentPage === 'jobs-page' ? (
-          <JobsPage />
-        ) : currentPage === 'visa-page' ? (
-          <VisaPage />
-        ) : currentPage === 'work-while-you-study-page' ? (
-          <WorkWhileYouStudyPage />
-        ) : currentPage === 'rewards-page' ? (
-          <RewardsPage />
-        ) : currentPage === 'about-us' ? (
-          <AboutUsPage />
-        ) : currentPage === 'ilas-with-you' ? (
-          <IlasWithYouPage />
-        ) : currentPage === 'study-abroad' ? (
-          <StudyAbroadPage />
-        ) : currentPage === 'tutor-path' ? (
-          <TutorPathPage />
-        ) : currentPage === 'education' ? (
-          <EducationPage />
-        ) : currentPage === 'applications' ? (
-          <ApplicationPoolPage />
-        ) : currentPage === 'privacy-policy' ? (
-          <PrivacyPolicyPage />
-        ) : (
-          <HomePage />
-        )}
+        <Routes>
+          {/* Main Pages */}
+          <Route path="/" element={<HomePage />} />
+          <Route path="/home" element={<Navigate to="/" replace />} />
+          <Route path="/education" element={<EducationPage />} />
+          
+          {/* Courses */}
+          <Route path="/course" element={<CoursePage />} />
+          <Route path="/course/:courseIdOrSlug" element={<CoursePage />} />
+          <Route path="/courses" element={<Navigate to="/education" replace />} />
+          <Route path="/courses/:courseIdOrSlug" element={<CoursePage />} />
+          <Route path="/german-language" element={<GermanLanguagePage />} />
+
+          {/* Core Service Hubs */}
+          <Route path="/study-abroad" element={<StudyAbroadPage />} />
+          <Route path="/work-while-you-study" element={<WorkWhileYouStudyPage />} />
+          <Route path="/work-while-you-study-page" element={<Navigate to="/work-while-you-study" replace />} />
+          <Route path="/visa" element={<VisaPage />} />
+          <Route path="/visa-page" element={<Navigate to="/visa" replace />} />
+          <Route path="/jobs" element={<JobsPage />} />
+          <Route path="/jobs-page" element={<Navigate to="/jobs" replace />} />
+          <Route path="/rewards" element={<RewardsPage />} />
+          <Route path="/rewards-page" element={<Navigate to="/rewards" replace />} />
+          <Route path="/about" element={<AboutUsPage />} />
+          <Route path="/about-us" element={<Navigate to="/about" replace />} />
+          <Route path="/ilas-with-you" element={<IlasWithYouPage />} />
+          <Route path="/ilas-companion" element={<Navigate to="/ilas-with-you" replace />} />
+
+          {/* Applications & Admissions */}
+          <Route path="/applications" element={<ApplicationPoolPage />} />
+          <Route path="/apply" element={<Navigate to="/applications" replace />} />
+
+          {/* Academic & Specialized Pathways */}
+          <Route path="/tutor-path" element={<TutorPathPage />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+          <Route path="/student-dashboard" element={<StudentDashboard />} />
+
+          {/* Admin & Portals */}
+          <Route path="/admin" element={<AdminPortal />} />
+          <Route path="/admin-portal" element={<Navigate to="/admin" replace />} />
+          <Route path="/admin-dashboard" element={<Navigate to="/admin" replace />} />
+          <Route path="/master-hub" element={<Navigate to="/admin" replace />} />
+          <Route path="/department-hub" element={<Navigate to="/admin" replace />} />
+          <Route path="/erp-portal" element={<Navigate to="/admin" replace />} />
+
+          {/* Fallback */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
       </main>
       {!isAdminPage && <Footer />}
       <PortalLogin />

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Briefcase, 
   Search, 
@@ -172,7 +173,7 @@ const packages = [
     duration: "6 Weeks",
     freeHeadline: "€0 FREE WITH REWARDS",
     freeOption: "Refer 3 Candidates or use Reward Points to get this 100% Free",
-    freeLink: "#rewards",
+    freeLink: "/rewards",
     description: "Intensive career support designed for quick market entry with focused application bursts.",
     features: [
       "Personalized European Career Roadmap",
@@ -191,7 +192,7 @@ const packages = [
     duration: "12 Weeks",
     freeHeadline: "€0 FREE VIA Work While You Study",
     freeOption: "Join as Junior Consultant & Complete Pilot to get this 100% Free",
-    freeLink: "#learn-while-earn",
+    freeLink: "/work-while-you-study",
     description: "Comprehensive mid-term strategy offering a deep dive into multiple European industry sectors.",
     features: [
       "Advanced European Market Placement Strategy",
@@ -212,7 +213,7 @@ const packages = [
     duration: "18 Weeks",
     freeHeadline: "€0 FREE FOR PILOT PERFORMERS",
     freeOption: "Free for Validated Local Business Performers & Executive Referrals",
-    freeLink: "#learn-while-earn",
+    freeLink: "/work-while-you-study",
     description: "Full-scale career transition management with absolute commitment to European placement success.",
     features: [
       "Direct German Corporate Sponsorship Focus",
@@ -230,6 +231,7 @@ const packages = [
 ];
 
 export default function JobsPage() {
+  const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [activeTab, setActiveTab] = useState('job-search-engine');
   const [searchTerm, setSearchTerm] = useState('');
@@ -244,7 +246,17 @@ export default function JobsPage() {
   }, []);
 
   const navigateTo = (url: string) => { 
-    window.location.hash = url; 
+    if (url.startsWith('#applications') || url.startsWith('#apply')) {
+      const q = url.includes('?') ? url.substring(url.indexOf('?')) : '';
+      navigate(`/applications${q}`);
+    } else if (url === '#learn-while-earn') {
+      navigate('/work-while-you-study');
+    } else if (url.startsWith('#')) {
+      const clean = url.replace('#', '');
+      navigate(`/${clean}`);
+    } else {
+      navigate(url);
+    }
   };
 
   const scrollTo = (id: string) => {

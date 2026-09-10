@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Upload,
   FileText,
@@ -31,7 +32,8 @@ const defaultProfile: Partial<EligibilityProfile> = {
   preferredPath: 'any',
 }
 
-export default function EligibilityChecker() {
+export default function EligibilityChecker({ onClose }: { onClose?: () => void }) {
+  const navigate = useNavigate()
   const [profile, setProfile] = useState<Partial<EligibilityProfile>>(defaultProfile)
   const [resumeFile, setResumeFile] = useState<File | null>(null)
   const [analyzing, setAnalyzing] = useState(false)
@@ -76,7 +78,8 @@ export default function EligibilityChecker() {
       alert('Please enter your email address before applying.')
       return
     }
-    window.location.hash = '#applications?tab=Education';
+    if (onClose) onClose();
+    navigate('/applications?tab=Education');
   }
 
   const handleVerifyCode = (e: React.FormEvent) => {

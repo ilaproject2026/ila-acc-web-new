@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Hero from '../components/common/Hero';
 import { ILAWithYouLogo } from '../components/common/Hero';
 import { ArrowRight, GraduationCap, Briefcase, Plane, Star, Clock, Globe, Award, Sparkles, TrendingUp, ShieldCheck, Users } from 'lucide-react';
@@ -15,7 +16,8 @@ const ServiceSection = ({
   ctaText,
   ctaLink
 }: any) => {
-  const openEligibility = () => window.location.hash = ctaLink;
+  const navigate = useNavigate();
+  const openEligibility = () => navigate(ctaLink);
 
   return (
     <section id={id} className={`py-20 md:py-28 ${bgColor} relative overflow-hidden`}>
@@ -70,7 +72,7 @@ const ServiceSection = ({
             {/* Consistent Branding integrations */}
             <div className="flex flex-col sm:flex-row gap-4 pt-1">
               {/* ILA With You Integration */}
-              <div className="flex-1 bg-gradient-to-br from-brand-900 to-brand-800 p-5 rounded-2xl relative overflow-hidden group cursor-pointer" onClick={() => window.location.hash = '#ilas-with-you'}>
+              <div className="flex-1 bg-gradient-to-br from-brand-900 to-brand-800 p-5 rounded-2xl relative overflow-hidden group cursor-pointer" onClick={() => navigate('/ilas-with-you')}>
                 <div className="absolute -right-4 -top-4 w-24 h-24 bg-white/10 rounded-full blur-xl group-hover:bg-white/20 transition-all" />
                 <ILAWithYouLogo light={true} size="sm" />
                 <p className="text-[10px] text-brand-100 mt-3 font-medium leading-relaxed max-w-[200px]">
@@ -79,7 +81,7 @@ const ServiceSection = ({
               </div>
 
               {/* Reward Points Integration */}
-              <div className="flex-1 bg-gradient-to-br from-amber-50 to-amber-100 border border-amber-200 p-5 rounded-2xl relative overflow-hidden group cursor-pointer" onClick={() => window.location.hash = '#rewards'}>
+              <div className="flex-1 bg-gradient-to-br from-amber-50 to-amber-100 border border-amber-200 p-5 rounded-2xl relative overflow-hidden group cursor-pointer" onClick={() => navigate('/rewards')}>
                 <Star className="absolute -right-2 -bottom-2 w-20 h-20 text-amber-200/50 group-hover:scale-110 transition-transform" />
                 <div className="flex items-center gap-2 mb-2">
                   <div className="p-1.5 bg-amber-400 rounded-lg text-white">
@@ -129,6 +131,8 @@ const ServiceSection = ({
 };
 
 export default function HomePage() {
+  const navigate = useNavigate();
+
   // Smooth scroll behavior
   useEffect(() => {
     document.documentElement.style.scrollBehavior = 'smooth';
@@ -151,7 +155,7 @@ export default function HomePage() {
         bgColor="bg-white"
         imageSrc="https://unsplash.com/photos/person-holding-light-bulb-education-concept-mpAwtcVBx-w"
         ctaText="Explore Courses"
-        ctaLink="#education"
+        ctaLink="/education"
         features={[
           { icon: <Globe className="w-5 h-5 text-accent-600"/>, title: "Global Certifications", desc: "Recognized worldwide" },
           { icon: <Sparkles className="w-5 h-5 text-accent-600"/>, title: "AI Tutoring", desc: "24/7 intelligent assistance" },
@@ -170,7 +174,7 @@ export default function HomePage() {
         bgColor="bg-slate-50"
         imageSrc="https://images.unsplash.com/photo-1436491865332-7a61a109c0f3?auto=format&fit=crop&q=80"
         ctaText="Check Visa Services"
-        ctaLink="#visa-page"
+        ctaLink="/visa"
         features={[
           { icon: <ShieldCheck className="w-5 h-5 text-blue-600"/>, title: "High Success Rate", desc: "Precision analytics & checking" },
           { icon: <Globe className="w-5 h-5 text-blue-600"/>, title: "On-Ground Support", desc: "Assistance upon arrival" },
@@ -189,7 +193,7 @@ export default function HomePage() {
         bgColor="bg-white"
         imageSrc="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80"
         ctaText="Find Global Jobs"
-        ctaLink="#jobs-page"
+        ctaLink="/jobs"
         features={[
           { icon: <Sparkles className="w-5 h-5 text-emerald-600"/>, title: "AI Matching", desc: "Find the perfect designation" },
           { icon: <TrendingUp className="w-5 h-5 text-emerald-600"/>, title: "Profit Sharing", desc: "Syndicate management programs" },
@@ -208,7 +212,7 @@ export default function HomePage() {
         bgColor="bg-slate-50"
         imageSrc="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80"
         ctaText="Apply for Work & Study"
-        ctaLink="#work-while-you-study-page"
+        ctaLink="/work-while-you-study"
         features={[
           { icon: <Star className="w-5 h-5 text-amber-600"/>, title: "Monthly Stipend", desc: "Financial independence" },
           { icon: <TrendingUp className="w-5 h-5 text-amber-600"/>, title: "Career Growth", desc: "Practical experience" },
@@ -227,7 +231,7 @@ export default function HomePage() {
         bgColor="bg-white"
         imageSrc="https://images.unsplash.com/photo-1529400971008-f566de0e6dfc?auto=format&fit=crop&q=80"
         ctaText="Start Your Journey"
-        ctaLink="#study-abroad"
+        ctaLink="/study-abroad"
         features={[
           { icon: <GraduationCap className="w-5 h-5 text-brand-600"/>, title: "Top Universities", desc: "Partnerships worldwide" },
           { icon: <Briefcase className="w-5 h-5 text-brand-600"/>, title: "Profile Building", desc: "Resume & SOP support" },
@@ -245,10 +249,10 @@ export default function HomePage() {
             From the first consultation to arriving at your dream destination, ILA Global is with you every step of the way.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <button onClick={() => window.location.hash = '#about'} className="px-8 py-3.5 bg-accent-500 text-brand-900 font-black rounded-xl hover:bg-accent-400 transition-all shadow-xl">
+            <button onClick={() => navigate('/about')} className="px-8 py-3.5 bg-accent-500 text-brand-900 font-black rounded-xl hover:bg-accent-400 transition-all shadow-xl cursor-pointer">
               About Us
             </button>
-            <button onClick={() => window.location.hash = '#ilas-with-you'} className="px-8 py-3.5 bg-white/10 text-white border-2 border-white/20 font-black rounded-xl hover:bg-white/20 transition-all backdrop-blur-md">
+            <button onClick={() => navigate('/ilas-with-you')} className="px-8 py-3.5 bg-white/10 text-white border-2 border-white/20 font-black rounded-xl hover:bg-white/20 transition-all backdrop-blur-md cursor-pointer">
               Discover ILA With You
             </button>
           </div>

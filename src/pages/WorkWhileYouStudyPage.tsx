@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   Briefcase, 
   TrendingUp, 
@@ -168,13 +169,15 @@ const globalExpatPerks = [
 ];
 
 const ecosystemPerks = [
-  { icon: Award, title: "1-Year Experience Certificate", highlight: "Verified Letter", desc: "formal corporate proof for German job & visa files.", link: "#applications?tab=Work While You Study" },
-  { icon: GraduationCap, title: "Course Fee Discounts", highlight: "Up to 50% Off", desc: "on Goethe German (A1-B2) and IELTS courses.", link: "#applications?tab=Education" },
-  { icon: ShieldCheck, title: "100% Visa & Job Support", highlight: "Germany Pathways", desc: "direct assistance for Opportunity Card and Work Visas.", link: "#jobs" },
-  { icon: Gift, title: "Lifetime Referral Rewards", highlight: "Continuous Bonus", desc: "earn rewards for project completions & candidate referrals.", link: "#rewards" }
+  { icon: Award, title: "1-Year Experience Certificate", highlight: "Verified Letter", desc: "formal corporate proof for German job & visa files.", link: "/applications?tab=Work While You Study" },
+  { icon: GraduationCap, title: "Course Fee Discounts", highlight: "Up to 50% Off", desc: "on Goethe German (A1-B2) and IELTS courses.", link: "/applications?tab=Education" },
+  { icon: ShieldCheck, title: "100% Visa & Job Support", highlight: "Germany Pathways", desc: "direct assistance for Opportunity Card and Work Visas.", link: "/jobs" },
+  { icon: Gift, title: "Lifetime Referral Rewards", highlight: "Continuous Bonus", desc: "earn rewards for project completions & candidate referrals.", link: "/rewards" }
 ];
 
 export default function WorkWhileYouStudyPage() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState('how-to-join');
   const [currentSlide, setCurrentSlide] = useState(0);
   const [selectedTrackId, setSelectedTrackId] = useState('it-automation');
@@ -197,11 +200,11 @@ export default function WorkWhileYouStudyPage() {
 
   useEffect(() => {
     const handleHash = () => {
-      const hash = window.location.hash;
+      const hash = location.hash || window.location.hash;
       if (hash.includes('#')) {
         const parts = hash.split('#').filter(Boolean);
         const rawTarget = parts[parts.length - 1];
-        if (rawTarget && rawTarget !== 'work-while-you-study-page') {
+        if (rawTarget && rawTarget !== 'work-while-you-study-page' && rawTarget !== 'work-while-you-study') {
           const aliasMap: Record<string, string> = {
             'overview': 'how-to-join',
             'growth': 'german-pathway',
@@ -222,10 +225,20 @@ export default function WorkWhileYouStudyPage() {
     handleHash();
     window.addEventListener('hashchange', handleHash);
     return () => window.removeEventListener('hashchange', handleHash);
-  }, []);
+  }, [location.hash]);
 
   const navigateTo = (url: string) => { 
-    window.location.hash = url; 
+    if (url.startsWith('#applications') || url.startsWith('#apply')) {
+      const q = url.includes('?') ? url.substring(url.indexOf('?')) : '';
+      navigate(`/applications${q}`);
+    } else if (url === '#ilas-companion') {
+      navigate('/ilas-with-you');
+    } else if (url.startsWith('#')) {
+      const clean = url.replace('#', '');
+      navigate(`/${clean}`);
+    } else {
+      navigate(url);
+    }
   };
 
   const scrollTo = (id: string) => {

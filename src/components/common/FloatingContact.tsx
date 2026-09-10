@@ -1,15 +1,16 @@
+import { Link } from 'react-router-dom'
 import { MessageCircle, Phone, Mail } from 'lucide-react'
 
 export default function FloatingContact() {
   return (
     <div className="fixed bottom-6 left-6 z-[80] group">
       <div className="absolute bottom-full left-0 mb-4 flex-col gap-2 items-start hidden group-hover:flex">
-        <a href="#about" className="flex items-center gap-3 bg-white px-4 py-2 rounded-full shadow-lg hover:bg-brand-50 transition-colors border border-slate-100">
+        <Link to="/about" className="flex items-center gap-3 bg-white px-4 py-2 rounded-full shadow-lg hover:bg-brand-50 transition-colors border border-slate-100">
           <span className="text-sm font-medium text-slate-700 whitespace-nowrap">About Us</span>
           <div className="w-8 h-8 rounded-full bg-brand-100 flex items-center justify-center text-brand-600">
             <span className="font-bold text-xs">ILA</span>
           </div>
-        </a>
+        </Link>
         <a href="mailto:contact@ilaglobal.com" className="flex items-center gap-3 bg-white px-4 py-2 rounded-full shadow-lg hover:bg-brand-50 transition-colors border border-slate-100">
           <span className="text-sm font-medium text-slate-700 whitespace-nowrap">contact@ilaglobal.com</span>
           <div className="w-8 h-8 rounded-full bg-brand-100 flex items-center justify-center text-brand-600">

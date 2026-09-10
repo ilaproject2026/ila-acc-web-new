@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Shield, Users, BarChart2, 
   Building, UserPlus, Maximize2, Minimize2, Activity, Settings, LogOut, Globe, Lock, Unlock, Award, Briefcase, GraduationCap, Plane, FileText, Key, ShieldCheck, DollarSign, Megaphone, Ticket, Building2, Trophy, Bot, Gift
@@ -31,6 +32,7 @@ interface VisitorStatType {
 }
 
 export default function AdminPortal() {
+  const navigate = useNavigate();
   const [role, setRole] = useState<string>('Super Admin');
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
@@ -194,11 +196,11 @@ export default function AdminPortal() {
             <UserPlus className="w-3.5 h-3.5" /> + Franchise
           </button>
 
-          <button onClick={() => { window.location.hash = '#home'; }} className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl flex items-center gap-1 border border-slate-200 cursor-pointer">
+          <button onClick={() => { navigate('/'); }} className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl flex items-center gap-1 border border-slate-200 cursor-pointer">
             <Globe className="w-3.5 h-3.5" /> Website
           </button>
 
-          <button onClick={() => { window.location.hash = '#home'; setTimeout(() => { window.dispatchEvent(new CustomEvent('open-portal-login')); }, 200); }} className="px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 text-xs font-bold rounded-xl flex items-center gap-1 border border-red-200/50 cursor-pointer">
+          <button onClick={() => { navigate('/'); setTimeout(() => { window.dispatchEvent(new CustomEvent('open-portal-login')); }, 200); }} className="px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 text-xs font-bold rounded-xl flex items-center gap-1 border border-red-200/50 cursor-pointer">
             <LogOut className="w-3.5 h-3.5" /> Logout
           </button>
         </div>

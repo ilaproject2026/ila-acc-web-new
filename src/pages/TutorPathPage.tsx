@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   BrainCircuit, Sparkles, ArrowRight, ArrowLeft, CheckCircle2,
   Play, Volume2, Mic, Layers, BookOpen, Clock, Award, Zap,
@@ -246,8 +247,28 @@ export default function TutorPathPage() {
     window.dispatchEvent(new CustomEvent('open-language-trainer'));
   };
 
-  const navigateTo = (hash: string) => {
-    window.location.hash = hash;
+  const navigate = useNavigate();
+  const navigateTo = (url: string) => {
+    if (url.startsWith('#applications') || url.startsWith('#apply')) {
+      const q = url.includes('?') ? url.substring(url.indexOf('?')) : '';
+      navigate(`/applications${q}`);
+    } else if (url.startsWith('#course-')) {
+      const slug = url.replace('#course-', '');
+      navigate(`/course/${slug}`);
+    } else if (url === '#home') {
+      navigate('/');
+    } else if (url === '#education') {
+      navigate('/education');
+    } else if (url === '#work-while-you-study-page' || url === '#work-while-you-study') {
+      navigate('/work-while-you-study');
+    } else if (url === '#rewards') {
+      navigate('/rewards');
+    } else if (url.startsWith('#')) {
+      const clean = url.replace('#', '');
+      navigate(`/${clean}`);
+    } else {
+      navigate(url);
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 

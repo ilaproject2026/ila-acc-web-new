@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { X, CheckCircle, CreditCard, Mail, LayoutDashboard, ShieldCheck } from 'lucide-react';
 import { saveInquiry } from '../../lib/db';
 
@@ -35,6 +36,7 @@ interface RegistrationFlowProps {
 }
 
 export default function RegistrationFlow({ isOpen, onClose, selectedPackage }: RegistrationFlowProps) {
+  const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     name: '',
@@ -320,7 +322,7 @@ export default function RegistrationFlow({ isOpen, onClose, selectedPackage }: R
                 <button 
                   onClick={() => {
                     onClose();
-                    window.location.hash = '#admin-portal';
+                    navigate('/admin');
                   }} 
                   className="w-full py-4 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition-all flex items-center justify-center gap-2 shadow-lg text-sm"
                 >
