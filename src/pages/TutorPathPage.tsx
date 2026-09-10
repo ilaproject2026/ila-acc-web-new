@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { 
-  BrainCircuit, Sparkles, ArrowRight, ArrowLeft, CheckCircle2, 
-  Play, Volume2, Mic, Layers, BookOpen, Clock, Award, Zap, 
-  ShieldCheck, Compass, Gift, Briefcase, GraduationCap, 
-  HelpCircle, ChevronDown, ChevronUp, ExternalLink, FileText, 
+import {
+  BrainCircuit, Sparkles, ArrowRight, ArrowLeft, CheckCircle2,
+  Play, Volume2, Mic, Layers, BookOpen, Clock, Award, Zap,
+  ShieldCheck, Compass, Gift, Briefcase, GraduationCap,
+  HelpCircle, ChevronDown, ChevronUp, ExternalLink, FileText,
   Check, Activity, Headphones, MessageSquareCode, MessageCircle,
-  Star, Target, Video, Presentation, Users, Flame, School, 
+  Star, Target, Video, Presentation, Users, Flame, School,
   ChevronRight, LayoutGrid, X
 } from 'lucide-react';
 
@@ -253,7 +253,7 @@ export default function TutorPathPage() {
 
   return (
     <div className="pt-20 bg-slate-50 min-h-screen pb-24 text-slate-900">
-      
+
       {/* 1. HERO HEADER */}
       <section className="relative overflow-hidden bg-slate-950 text-white py-16 lg:py-24 px-4 sm:px-6 lg:px-8 rounded-b-[3rem] shadow-2xl border-b border-slate-800">
         <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
@@ -277,7 +277,7 @@ export default function TutorPathPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
             <div className="lg:col-span-8 space-y-6">
-              
+
               <div className="flex flex-wrap items-center gap-2.5">
                 <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-brand-500/20 to-indigo-500/20 text-brand-300 border border-brand-400/30 text-xs font-black uppercase tracking-wider backdrop-blur-md">
                   <BrainCircuit className="w-4 h-4 text-amber-400 animate-pulse" />
@@ -488,7 +488,7 @@ export default function TutorPathPage() {
                   <div className={`w-14 h-14 rounded-2xl border-2 ${format.borderClass} ${format.bgClass} flex items-center justify-center ${format.textClass} shadow-lg shadow-black/30 group-hover:scale-110 transition-all`}>
                     <IconComponent className="w-7 h-7" />
                   </div>
-                  
+
                   <span className={`text-[9px] font-black tracking-wider border px-2 py-0.5 rounded-full uppercase mt-3 whitespace-nowrap ${format.badgeClass}`}>
                     {format.badge}
                   </span>
@@ -1540,7 +1540,7 @@ export default function TutorPathPage() {
       {/* 6. INTEGRATION WITH STUDENT STIPEND & CAREER PERKS */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24">
         <div className="bg-gradient-to-r from-slate-900 via-brand-950 to-slate-900 rounded-3xl p-8 sm:p-12 text-white border border-slate-800 shadow-2xl relative overflow-hidden">
-          
+
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
             <div className="lg:col-span-8 space-y-4">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30 text-xs font-black uppercase tracking-wider">
@@ -1628,7 +1628,7 @@ export default function TutorPathPage() {
               a: "Students who achieve German B1 proficiency and complete our Junior Consultant orientation become eligible for placement in verified enterprise translation, operations, and IT support roles."
             }
           ].map((faq, idx) => (
-            <div 
+            <div
               key={idx}
               className="bg-white rounded-2xl border border-slate-200 overflow-hidden transition-all shadow-xs"
             >
