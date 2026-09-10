@@ -5,6 +5,41 @@ export type ConsultantTopic = 'visa' | 'arrival' | 'housing' | 'local' | 'jobs' 
 export interface ConsultantReplyResult {
   reply: string
   actions?: string[]
+  sessionId?: string
+  isFallback?: boolean
+  leadDetected?: {
+    email?: string
+    phone?: string
+  }
+}
+
+/**
+ * Detect email and phone numbers from user messages
+ */
+export function extractContactInfo(text: string): { email?: string; phone?: string } {
+  const emailMatch = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/)
+  const phoneMatch = text.match(/(?:\+?\d{1,3}[-.\s]?)?\(?\d{3,5}\)?[-.\s]?\d{3,5}[-.\s]?\d{3,5}/)
+  
+  const validPhone = phoneMatch && phoneMatch[0].replace(/\D/g, '').length >= 8 ? phoneMatch[0].trim() : undefined
+
+  return {
+    email: emailMatch ? emailMatch[0] : undefined,
+    phone: validPhone,
+  }
+}
+
+/**
+ * Detect if message contains high buying intent or callback requests
+ */
+export function hasHighLeadIntent(text: string): boolean {
+  const lower = text.toLowerCase()
+  const intentKeywords = [
+    'call me', 'contact me', 'reach me', 'call back', 'callback',
+    'enroll', 'register', 'admission', 'apply now', 'book consultation',
+    'appointment', 'talk to advisor', 'speak to counselor', 'my number is',
+    'my phone', 'my email'
+  ]
+  return intentKeywords.some((keyword) => lower.includes(keyword))
 }
 
 export const topicLabels: Record<ConsultantTopic, string> = {
@@ -15,6 +50,7 @@ export const topicLabels: Record<ConsultantTopic, string> = {
   jobs: 'Job Hunting',
   general: 'General Help',
 }
+
 
 export const topicStarters: Record<ConsultantTopic, string> = {
   visa: 'I need help with my visa application process.',
@@ -195,19 +231,35 @@ export async function askGeminiConsultant(
   userMessage: string,
   history: ChatHistoryItem[],
   topic: ConsultantTopic = 'general',
-  messageIndex = 0
+  messageIndex = 0,
+  sessionId?: string,
+  userContext?: { email?: string; phone?: string; name?: string; userId?: string }
 ): Promise<ConsultantReplyResult> {
   const geminiApiKey = import.meta.env.VITE_GEMINI_API_KEY
+  const detectedContact = extractContactInfo(userMessage)
+  const isHighIntent = hasHighLeadIntent(userMessage)
+
+  const leadPayload = (detectedContact.email || detectedContact.phone || isHighIntent)
+    ? {
+        email: detectedContact.email || userContext?.email,
+        phone: detectedContact.phone || userContext?.phone,
+      }
+    : undefined
 
   // 1. Primary: Trigger Central Django REST Framework Backend API (/api/v1/consultant/chat/)
   try {
-    const { data, error } = await consultantService.chat({
+    const { data } = await consultantService.chat({
+      session_id: sessionId,
       message: userMessage,
       topic,
       history: history.slice(-8).map((h) => ({
         role: h.role === 'user' ? 'user' : 'model',
         content: h.content,
       })),
+      user_id: userContext?.userId,
+      user_name: userContext?.name,
+      user_email: detectedContact.email || userContext?.email,
+      user_phone: detectedContact.phone || userContext?.phone,
     })
 
     if (data && data.reply) {
@@ -217,6 +269,9 @@ export async function askGeminiConsultant(
       return {
         reply: data.reply,
         actions: data.suggested_actions,
+        sessionId: data.session_id || sessionId,
+        isFallback: false,
+        leadDetected: leadPayload,
       }
     }
   } catch (err) {
@@ -265,7 +320,12 @@ export async function askGeminiConsultant(
         }
 
         if (text && typeof text === 'string' && text.trim().length > 0) {
-          return { reply: text.trim() }
+          return {
+            reply: text.trim(),
+            sessionId,
+            isFallback: true,
+            leadDetected: leadPayload,
+          }
         }
       }
     } catch {
@@ -275,7 +335,11 @@ export async function askGeminiConsultant(
 
   // 3. Graceful Fallback: High-quality rule-based domain responses
   return {
-    reply: getConsultantReply(topic, userMessage, messageIndex)
+    reply: getConsultantReply(topic, userMessage, messageIndex),
+    sessionId,
+    isFallback: true,
+    leadDetected: leadPayload,
   }
 }
+
 

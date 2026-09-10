@@ -141,6 +141,16 @@ export default function EducationPage() {
       {/* 2. DYNAMIC STICKY SUB-NAVIGATION BAR */}
       <div id="edu-tour-nav" className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200 py-3 mb-10 transition-all duration-300 shadow-2xs">
         <div className="container-max mx-auto px-6 flex items-center justify-start md:justify-center gap-3 md:gap-6 overflow-x-auto hide-scrollbar">
+          {/* 1. Tutor Path Key (Comes First) */}
+          <a
+            href="#tutor-path"
+            className="text-xs md:text-sm font-black pb-1.5 transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 text-amber-700 hover:text-amber-800 bg-amber-50 hover:bg-amber-100 px-3 py-1 rounded-full border border-amber-300 shadow-xs mr-1"
+            title="Tutor Path: Intelli-Coach AI & Course Page Instructions"
+          >
+            <BrainCircuit className="w-3.5 h-3.5 text-amber-600 animate-pulse" />
+            <span>Tutor Path (Intelli-Coach)</span>
+          </a>
+
           {mainViewCourses.map((course, idx) => (
             <button
               key={course.id}
@@ -151,22 +161,10 @@ export default function EducationPage() {
                   : 'text-slate-600 hover:text-slate-900 border-b-2 border-transparent'
               }`}
             >
-              {/* <span className="w-5 h-5 rounded-full bg-brand-50 text-brand-700 text-[10px] flex items-center justify-center font-black">
-                {idx + 1}
-              </span> */}
               <span>{course.name}</span>
             </button>
           ))}
 
-          {/* Tutor Path Key */}
-          <a
-            href="#tutor-path"
-            className="text-xs md:text-sm font-black pb-1.5 transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 text-amber-700 hover:text-amber-800 bg-amber-50 hover:bg-amber-100 px-3 py-1 rounded-full border border-amber-300 shadow-xs"
-            title="Tutor Path: Intelli-Coach AI & Course Page Instructions"
-          >
-            <BrainCircuit className="w-3.5 h-3.5 text-amber-600 animate-pulse" />
-            <span>Tutor Path (Intelli-Coach)</span>
-          </a>
 
           <button
             onClick={() => scrollTo('catalog-blocks')}

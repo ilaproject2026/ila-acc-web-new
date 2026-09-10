@@ -528,8 +528,13 @@ export default function ApplicationPoolPage() {
       ...inboundContext.keywords
     ])).filter(Boolean);
 
+    // Pre-generate official token number so it is sent in payload to DRF backend
+    const generatedToken = `INQ-${new Date().getFullYear()}-${Math.floor(100000 + Math.random() * 900000)}`;
+
     // Build complete structured payload for DRF Backend
     const backendPayload = {
+      token_number: generatedToken,
+      tokenNumber: generatedToken,
       name: formData.name,
       email: formData.email,
       phone: formData.phone,
@@ -565,6 +570,8 @@ export default function ApplicationPoolPage() {
 
       // Complete Section Data snapshot
       section_data: {
+        token_number: generatedToken,
+        tokenNumber: generatedToken,
         service: formData.service,
         educationCourse: formData.educationCourse,
         educationMethod: formData.educationMethod,
@@ -595,7 +602,7 @@ export default function ApplicationPoolPage() {
       // 1. Dispatch to Django REST Framework (DRF) Backend
       const { data: drfData, error: drfError } = await inquiryService.createInquiry(backendPayload);
 
-      let tokenNumber = `ILA-2026-${Math.floor(100000 + Math.random() * 900000)}`;
+      let tokenNumber = generatedToken;
 
       if (drfError) {
         if (drfError.isNetworkError) {
@@ -620,7 +627,8 @@ export default function ApplicationPoolPage() {
       // 2. Always persist to client-side localStorage DB to maintain uninterrupted local state
       saveInquiry({
         ...backendPayload,
-        tokenNumber
+        tokenNumber,
+        token_number: tokenNumber
       });
 
       setSubmissionResult({

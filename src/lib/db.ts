@@ -14,6 +14,7 @@ export interface Inquiry {
   phone: string;
   type?: 'Walk-in' | 'Online' | 'Referral' | 'Phone';
   tokenNumber?: string;
+  token_number?: string;
   course: string;
   path: string;
   batch?: string;

@@ -407,6 +407,20 @@ export default function CoursePage({ courseTitle: initialTitle = "German Languag
               <span className="text-xs font-bold text-slate-400 uppercase tracking-wider pr-2 shrink-0 hidden md:inline">
                 Sub Nav:
               </span>
+
+              {/* 1. Tutor Path Key (Comes First) */}
+              <a
+                href="#tutor-path"
+                className="px-4 py-2 rounded-full text-xs sm:text-sm font-black transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 bg-gradient-to-r from-amber-500 via-orange-500 to-brand-600 text-white shadow-sm hover:shadow-md hover:scale-105 mr-1"
+                title="Tutor Path: Intelli-Coach AI & Course Page Blueprint"
+              >
+                <BrainCircuit className="w-4 h-4 text-amber-100 animate-pulse" />
+                <span>Tutor Path</span>
+                <span className="text-[10px] px-1.5 py-0.2 bg-white/20 rounded-full font-bold uppercase tracking-wider hidden sm:inline">
+                  Intelli-Coach
+                </span>
+              </a>
+
               {subNavCourses.map((c) => {
                 const isActive = c.id === activeCourse?.id;
                 return (
@@ -430,20 +444,8 @@ export default function CoursePage({ courseTitle: initialTitle = "German Languag
                   </button>
                 );
               })}
-
-              {/* Tutor Path Key */}
-              <a
-                href="#tutor-path"
-                className="px-4 py-2 rounded-full text-xs sm:text-sm font-black transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 bg-gradient-to-r from-amber-500 via-orange-500 to-brand-600 text-white shadow-sm hover:shadow-md hover:scale-105 ml-1.5"
-                title="Tutor Path: Intelli-Coach AI & Course Page Blueprint"
-              >
-                <BrainCircuit className="w-4 h-4 text-amber-100 animate-pulse" />
-                <span>Tutor Path</span>
-                <span className="text-[10px] px-1.5 py-0.2 bg-white/20 rounded-full font-bold uppercase tracking-wider hidden sm:inline">
-                  Intelli-Coach
-                </span>
-              </a>
             </div>
+
 
             {/* Quick jump to Job Certifications */}
             {jobRelatedCourses.length > 0 && (
