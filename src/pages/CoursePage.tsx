@@ -416,9 +416,9 @@ export default function CoursePage({ courseTitle: initialTitle = "German Languag
               >
                 <BrainCircuit className="w-4 h-4 text-amber-100 animate-pulse" />
                 <span>Tutor Path</span>
-                <span className="text-[10px] px-1.5 py-0.2 bg-white/20 rounded-full font-bold uppercase tracking-wider hidden sm:inline">
+                {/* <span className="text-[10px] px-1.5 py-0.2 bg-white/20 rounded-full font-bold uppercase tracking-wider hidden sm:inline">
                   Intelli-Coach
-                </span>
+                </span> */}
               </a>
 
               {subNavCourses.map((c) => {
